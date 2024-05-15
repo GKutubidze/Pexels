@@ -6,6 +6,8 @@ import ConditionalBoard from "./CondtionalBoard";
 import { Photo } from "pexels/dist/types";
 
 const SearchComponent = () => {
+  const isClientSide = typeof window !== 'undefined';
+  const isMobile = isClientSide && window.innerWidth >375
   const [isArrowDown, setIsArrowDown] = useState<boolean>(true);
   const [showConditionalBoard, setShowConditionalBoard] =
     useState<boolean>(false);
@@ -40,7 +42,7 @@ const SearchComponent = () => {
             <Image src="/video-icon.svg" alt="video" width={20} height={20} />
           )}
 
-          {window.innerWidth > 375 && (  
+          {isMobile && (  
             <>
               {isPictureClicked ? (
                 <p style={{ fontSize: "16px", color: "black" }}>Pictures</p>
