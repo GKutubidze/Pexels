@@ -1,0 +1,34 @@
+.main{
+    display: flex;
+    justify-content: space-between;
+    
+  }
+  
+  .menuContainer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+   
+  }
+
+  .menuContainer p {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--white);
+  }
+  
+  .join {
+    all: unset;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    min-height: 40px;
+    min-width: 70px;
+    border-radius: 5px;
+    background-color: white;
+    text-align: center;
+  }
+ .explore {
+    display: flex;
+    align-items: center;
+ }

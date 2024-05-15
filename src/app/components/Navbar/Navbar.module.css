@@ -1,0 +1,25 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.menuContainer {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.join {
+  all: unset;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  min-height: 40px;
+  min-width: 70px;
+  border-radius: 5px;
+  background-color: white;
+  text-align: center;
+}
+.menu{
+    cursor: pointer;
+}
