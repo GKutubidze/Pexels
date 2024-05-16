@@ -1,21 +1,16 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useContext } from "react";
 import styles from "./MediaComponent.module.css";
 import { Photo, PhotosWithTotalResults } from "pexels";
 import Image from "next/image";
 import MediaHeader from "./MediaHeader";
 import MediaNavigaton from "./MediaNavigaton";
+import { MyContext } from "@/app/Context";
 
-type Props = {
-  photos: PhotosWithTotalResults
-  loading: boolean;
-  error: any;
-  setLoading:Dispatch<SetStateAction<boolean>>
-};
-export default function MediaComponent(props: Props) {
-  const { photos, loading, error,setLoading} = props;
+export default function MediaComponent() {
+  const context=useContext(MyContext);
  
   const handleImageLoad = () => {
-    setLoading(false); // Update loading state when image is loaded
+    context.setLoading(false); // Update loading state when image is loaded
     console.log("Image loaded successfully");
   };
   return (
@@ -23,7 +18,7 @@ export default function MediaComponent(props: Props) {
       <MediaNavigaton/>
       <MediaHeader/>
       <div className={styles.photosContainer}>
-        {photos.photos.map((photo) => (
+        {context.photos.photos.map((photo) => (
           <div key={photo.id} className={styles.photoWrapper}>
             <Image
               src={photo.src.original}
@@ -38,7 +33,7 @@ export default function MediaComponent(props: Props) {
           </div>
         ))}
       </div>
-      {loading && <div className={styles.loadingIndicator}>Loading...</div>}
+      {context.loading && <div className={styles.loadingIndicator}>Loading...</div>}
 
     </div>
   );
