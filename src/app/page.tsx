@@ -27,17 +27,23 @@ export default function Home() {
      
   });
   const [page, setPage] = useState<number>(1);
-   const [randomPhoto, setRandomPhoto] = useState<Photo[]>();
+   const [randomPhoto, setRandomPhoto] = useState<Photo>();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   
   
   useEffect(() => {
     const fetchRandomPhoto = async () => {
+      setLoading(true);
       try {
-        const response = await client.photos.curated({ per_page: 1 });
+        // Generate a random page number
+        const randomPage = Math.floor(Math.random() * 100) + 1; // Adjust the range as needed
+
+        // Fetch a random photo from the random page
+        const response = await client.photos.curated({ page: randomPage, per_page: 1 });
+
         if ('photos' in response && response.photos.length > 0) {
-          setRandomPhoto(response.photos);
+          setRandomPhoto(response.photos[0]);
         }
       } catch (error) {
         console.error("Error fetching random photo:", error);
@@ -47,8 +53,7 @@ export default function Home() {
     };
 
     fetchRandomPhoto();
-  }, []);
-
+  }, []); // Empty dependency array ensures this effect runs only once on mount
 
   const fetchPhotos = async () => {
     setLoading(true);

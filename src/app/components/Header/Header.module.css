@@ -31,7 +31,7 @@
 }
 
 .photoBy {
-    color: white;
+  color: white;
 }
 .photographer {
   color: white;
@@ -102,36 +102,30 @@
   }
 }
 
-
 @media screen and (min-width: 768px) {
+  .info {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 20%;
+  }
+  .photographerContainer {
+    right: 15px;
+    bottom: 25px;
+  }
 
-    .info{
-        width: 90%;
-        margin: 0 auto;
-        margin-top: 20%;
-
-     }
-     .photographerContainer {
-       
-        right: 15px;
-        bottom: 25px;
-      }
-
-      .info p {
-        text-align: justify;
-      }
-
+  .info p {
+    text-align: justify;
+  }
 }
 @media screen and (min-width: 1024px) {
   .header {
     background-position: none;
-    min-height: 80vh;
+    min-height: 85vh;
+    padding: 25px 25px 0 25px;
   }
 
   .info {
-     width: 50%;
-     margin-top: 10%;
-
-
+    width: 50%;
+    margin-top: 10%;
   }
 }

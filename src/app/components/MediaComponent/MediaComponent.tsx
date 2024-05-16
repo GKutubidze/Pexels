@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import styles from "./MediaComponent.module.css";
 import { Photo, PhotosWithTotalResults } from "pexels";
 import Image from "next/image";
+import MediaHeader from "./MediaHeader";
 
 type Props = {
   photos: PhotosWithTotalResults
@@ -18,6 +19,7 @@ export default function MediaComponent(props: Props) {
   };
   return (
     <div className={styles.main}>
+      <MediaHeader/>
       <div className={styles.photosContainer}>
         {photos.photos.map((photo) => (
           <div key={photo.id} className={styles.photoWrapper}>

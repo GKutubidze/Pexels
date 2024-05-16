@@ -2,9 +2,8 @@ import React from "react";
 import styles from "./DesktopNavbar.module.css";
 import Image from "next/image";
 import logo from "../../../../public/temp.png";
-import menu from "../../../../public/menu.svg";
-import icon from "../../../../public/icon-down.svg";
-import dots from "../../../../public/dots.svg"
+import icon from "../../../../public/arrow-down.svg";
+import dots from "../../../../public/dots.svg";
 export const DesktopNavbar = () => {
   return (
     <div className={styles.main}>
@@ -13,6 +12,7 @@ export const DesktopNavbar = () => {
       <div className={styles.menuContainer}>
         <div className={styles.explore}>
           <p>Explore</p>
+
           <Image src={icon} alt="" />
         </div>
         <div className={styles.license}>
@@ -21,10 +21,10 @@ export const DesktopNavbar = () => {
         <div className={styles.upload}>
           <p>Upload</p>
         </div>
-        <Image src={dots} alt=""/>
+        <Image src={dots} alt="" />
 
         <button className={styles.join}>Join</button>
-       </div>
+      </div>
     </div>
   );
 };

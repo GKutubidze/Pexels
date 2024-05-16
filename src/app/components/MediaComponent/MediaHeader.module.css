@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+   margin-bottom: 30px;
+}
+
+.trendingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 132px;
+  background-color: var(--white);
+  color: black;
+  border: 1px solid #c2c1c1;
+  border-radius: 10px;
+  font-weight: bold;
+  gap: 10px;
+  cursor: pointer;
+  line-height: 1.3;
+  min-height: 50px;
+
+}
+
+.title p {
+  font-size: 23px;
+  color: #2c343e;
+  font-weight: bold;
+}
