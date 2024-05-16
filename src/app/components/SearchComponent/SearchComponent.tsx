@@ -1,20 +1,26 @@
 "use client";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./SearchComponent.module.css";
 import ConditionalBoard from "./CondtionalBoard";
-import { Photo } from "pexels/dist/types";
+import { useWindowWidth } from "@/app/hooks/useWindowWidth";
+import { useRouter } from "next/navigation";
+ type Props={
+  query:string,
+  setQuery:Dispatch<SetStateAction<string>>
 
-const SearchComponent = () => {
-  const isClientSide = typeof window !== 'undefined';
-  const isMobile = isClientSide && window.innerWidth >375
-  const [isArrowDown, setIsArrowDown] = useState<boolean>(true);
+ }
+const SearchComponent = ({query,setQuery}:Props) => {
+  const router=useRouter();
+  const width=useWindowWidth();
+   const [isArrowDown, setIsArrowDown] = useState<boolean>(true);
   const [showConditionalBoard, setShowConditionalBoard] =
     useState<boolean>(false);
   const [media, setMedia] = useState<string>("Photos");
   const [isPictureClicked, setIsPictureClicked] = useState<boolean>(true);
   const [isVideoClicked, setIsVideoClicked] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>("");
+ 
    return (
     <div className={styles.searchComponent}>
       {(!isArrowDown || showConditionalBoard) && (
@@ -42,7 +48,7 @@ const SearchComponent = () => {
             <Image src="/video-icon.svg" alt="video" width={20} height={20} />
           )}
 
-          {isMobile && (  
+          {width<375 && (  
             <>
               {isPictureClicked ? (
                 <p style={{ fontSize: "16px", color: "black" }}>Pictures</p>
@@ -84,6 +90,10 @@ const SearchComponent = () => {
             alt="Search Icon"
             width={25}
             height={25}
+            onClick={()=>{
+              setQuery(searchText);
+              router.push(`/search/${searchText}`)
+            }}
           />
         </div>
       </div>

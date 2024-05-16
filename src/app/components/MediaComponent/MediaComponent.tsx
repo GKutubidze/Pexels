@@ -3,6 +3,7 @@ import styles from "./MediaComponent.module.css";
 import { Photo, PhotosWithTotalResults } from "pexels";
 import Image from "next/image";
 import MediaHeader from "./MediaHeader";
+import MediaNavigaton from "./MediaNavigaton";
 
 type Props = {
   photos: PhotosWithTotalResults
@@ -19,6 +20,7 @@ export default function MediaComponent(props: Props) {
   };
   return (
     <div className={styles.main}>
+      <MediaNavigaton/>
       <MediaHeader/>
       <div className={styles.photosContainer}>
         {photos.photos.map((photo) => (

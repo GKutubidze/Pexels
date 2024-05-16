@@ -1,6 +1,7 @@
 :root{
   --white:#fff;
   --media-wrapper-bg-color:#DFDFE0;
+  --media-header-color:#4a4a4a;
 }
 * {
   box-sizing: border-box;

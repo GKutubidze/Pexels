@@ -6,18 +6,17 @@ import {
   PhotosWithTotalResults,
   ErrorResponse,
   createClient,
-  PaginationParams
-} from "pexels";
+ } from "pexels";
+ import { MyContext } from "./Context";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import MediaComponent from "./components/MediaComponent/MediaComponent";
    
 export default function Home() {
- 
+  const context = useContext(MyContext);
   const apiKey =process.env.NEXT_PUBLIC_API_KEY as string;
   const client = createClient(apiKey);
-  const perPage = 20;
-
+ 
   const [photos, setPhotos] = useState<PhotosWithTotalResults>({
     photos: [],
     page: 0,
@@ -26,13 +25,14 @@ export default function Home() {
     next_page: 0
      
   });
+ 
   const [page, setPage] = useState<number>(1);
-   const [randomPhoto, setRandomPhoto] = useState<Photo>();
+  const [randomPhoto, setRandomPhoto] = useState<Photo>();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [query,setQuery]=useState<string>("");
   
-  
-  useEffect(() => {
+   useEffect(() => {
     const fetchRandomPhoto = async () => {
       setLoading(true);
       try {
@@ -102,11 +102,45 @@ export default function Home() {
   }, []);
 
 
+ 
+
+  const searchPhotos = async () => {
+    setLoading(true);
+    try {
+      const response = await client.photos.search({
+        query,
+        page: photos.page + 1,
+        per_page: 10
+      });
+      if ('photos' in response) {
+        context.setSearchedPhotos(prevPhotos => ({
+          photos: [...prevPhotos.photos, ...response.photos],
+          page: response.page,
+          per_page: response.per_page,
+          total_results: response.total_results,
+          next_page: response.next_page
+        }));
+      } else {
+        // Handle error response
+        console.error("Error response:", response);
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (query !== '') {
+      searchPhotos();
+    }
+  }, [query]);
    
   
   return (
     <main className={styles.main}>
-      <Header randomPhoto={randomPhoto} />
+      <Header randomPhoto={randomPhoto} query={query} setQuery={setQuery}/>
       <MediaComponent photos={photos} loading={loading} error={error} setLoading={setLoading} />
       
     </main>

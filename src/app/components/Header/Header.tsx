@@ -1,19 +1,21 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import styles from "./Header.module.css";
 import Navbar from "../Navbar/Navbar";
 import SearchComponent from "../SearchComponent/SearchComponent";
 import { Photo } from "pexels";
 import { DesktopNavbar } from "../Navbar/DesktopNavbar";
+import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 
 type Props = {
   randomPhoto: Photo | undefined;
+  query:string,
+  setQuery:Dispatch<SetStateAction<string>>
 };
 
-const Header = ({ randomPhoto }: Props) => {
-  const isClientSide = typeof window !== 'undefined';
-  const isMobile = isClientSide && window.innerWidth < 768;
-
+const Header = ({ randomPhoto,query,setQuery }: Props) => {
+  const width=useWindowWidth();
+ 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,13 +31,13 @@ const Header = ({ randomPhoto }: Props) => {
   return (
     <>
       <div className={styles.header} style={headerStyle}>
-        {isMobile ? <Navbar /> : <DesktopNavbar />}
+        {width<768 ? <Navbar /> : <DesktopNavbar />}
 
         <div className={styles.info}>
           <p>
             The best free stock photos, royalty free images & videos shared by creators.
           </p>
-          <SearchComponent />
+          <SearchComponent query={query} setQuery={setQuery} />
           <div className={styles.photographerContainer}>
             <span className={styles.photoBy}>Photo by</span>
             <span className={styles.photographer}>
@@ -45,7 +47,7 @@ const Header = ({ randomPhoto }: Props) => {
         </div>
       </div>
       {/* Conditionally render loading indicator */}
-      {isClientSide && loading && (
+      { loading && (
         <div className={styles['placeholder-overlay']}>
           <div className={styles.spinner}></div>
         </div>
