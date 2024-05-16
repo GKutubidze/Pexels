@@ -4,15 +4,10 @@ import React, { useContext } from "react";
 
 const Page = ({params}: {params: {query: string}}) => {
   const context = useContext(MyContext);
-  
+  console.log(context.searchedPhotos)
   return <div>{params.query}
-  {
-    context.searchedPhotos.photos.map((item,key)=>{
-      return (
-        <p key={key}>{item.src.medium}</p>
-      )
-    })
-  }
+ 
+     
   </div>;
 };
 

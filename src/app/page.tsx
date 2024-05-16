@@ -79,10 +79,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    fetchPhotos();
-  }, []);
-
+ 
 
   const handleScroll = () => {
     if (
@@ -131,6 +128,7 @@ export default function Home() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     if (query !== '') {
       searchPhotos();
@@ -149,54 +147,4 @@ export default function Home() {
 
 
 
-
-
-// const fetchPhotosByQuery = () => {
-//   fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=${perPage}`, {
-//     headers: {
-//       Authorization: apiKey
-//     }
-//   })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     return response.json();
-//   })
-//   .then(data => {
-//     setPhotos(data.photos);
-//   })
-//   .catch(error => {
-//     setError(error.message);
-//   });
-// };
-
-
-
-
-// const fetchPhotos = () => {
-//   fetch(`https://api.pexels.com/v1/curated?page=${pageRef.current}&per_page=${perPage}`, {
-//    headers: {
-//      Authorization: apiKey
-//    }
-//  })
-//  .then(response => {
-//    setLoading(false)
-
-//    if (!response.ok) {
-//      throw new Error('Network response was not ok');
-//    }
-//    return response.json();
-//  })
-//  .then(data => {
-//    setPhotos(prevPhotos => [...prevPhotos, ...data.photos]); // Append new photos to existing ones
-//    // Update pageRef for the next fetch
-//    pageRef.current = data.page + 1; // Increment the page for the next fetch
-//  })
-//  .catch(error => {
-//    setError(error.message);
-//  })
-//  .finally(() => {
-//    setLoading(true)
-//   });
-// };
+ 
