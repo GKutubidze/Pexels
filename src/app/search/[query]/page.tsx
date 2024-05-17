@@ -1,6 +1,6 @@
 'use client'
 import React, { useContext, useEffect, useState } from "react";
-import { MediaContext } from "@/app/Context/Context";
+import { MediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import ImagesContainer from "@/app/components/MediaComponent/ImagesContainer";
 import styles from "./page.module.css"

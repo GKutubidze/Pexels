@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styles from './MediaNavigaton.module.css';
-import { MediaContext } from '@/app/Context/Context';
+import { MediaContext } from '@/app/Context/MediaContext';
 
 type MediaType = "Home" | "Videos" | 'Challenges';
 

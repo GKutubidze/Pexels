@@ -6,7 +6,7 @@ import SearchComponent from "../SearchComponent/SearchComponent";
 import { createClient, Photo } from "pexels";
 import { DesktopNavbar } from "../Navbar/DesktopNavbar";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
-import { MediaContext } from "@/app/Context/Context";
+import { MediaContext } from "@/app/Context/MediaContext";
  
 
 

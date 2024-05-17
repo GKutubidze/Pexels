@@ -1,5 +1,5 @@
 'use client'
-import { MediaContext } from '@/app/Context/Context'
+import { MediaContext } from '@/app/Context/MediaContext'
 import { getPexelsClient } from '@/app/utils/getPexelsClient'
 import { PhotosWithTotalResults } from 'pexels'
 import React, { useContext, useEffect, useState } from 'react'

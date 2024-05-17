@@ -1,9 +1,11 @@
-import React, { memo, useContext } from 'react'
+'use client'
+import React, { memo, useContext, useEffect, useState } from 'react'
 import styles from "./ImagesContainer.module.css"
 import Image from 'next/image'
 import download from "../../../../public/download.svg"
-import { MediaContext } from '@/app/Context/Context'
+import { MediaContext } from '@/app/Context/MediaContext'
 import { PhotosWithTotalResults } from 'pexels'
+import { getPexelsClient } from '@/app/utils/getPexelsClient'
 
 
 type Props ={
@@ -13,6 +15,9 @@ type Props ={
 const ImagesContainer = (props:Props) => {
     const {photos}=props;
     const context=useContext(MediaContext)
+    const [page, setPage] = useState<number>(1);
+    const client =getPexelsClient();
+
     const handleImageLoad = () => {
         context.setLoading(false); // Update loading state when image is loaded
         console.log("Image loaded successfully");
@@ -37,6 +42,47 @@ const ImagesContainer = (props:Props) => {
       })
       .catch(error => console.error('Download failed', error));
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+
+      const fetchPhotos = async () => {
+        context.setLoading(true);
+        try {
+          const response = await client.photos.curated({ page, per_page: 15 });
+          if ("photos" in response) {
+            context.setPhotos((prevPhotos) => ({
+              ...prevPhotos,
+              photos: [...prevPhotos.photos, ...response.photos],
+              page: response.page,
+              per_page: response.per_page,
+            }));
+            setPage((prevPage) => prevPage + 1);
+          } else {
+            // Handle error response
+            console.error("Error response:", response);
+          }
+        } catch (error) {
+          // Handle network errors or other exceptions
+          console.error("Error:", error);
+        } finally {
+          context.setLoading(false);
+        }
+      };
+        if (
+          window.innerHeight + document.documentElement.scrollTop ===
+          document.documentElement.offsetHeight
+        ) {
+          fetchPhotos();
+        }
+      };
+    
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   return (
     <div className={styles.photosContainer}>

@@ -6,7 +6,7 @@ import ConditionalBoard from "./CondtionalBoard";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { useRouter } from "next/navigation";
  import { createClient } from "pexels";
-import { MediaContext } from "@/app/Context/Context";
+import { MediaContext } from "@/app/Context/MediaContext";
  type Props={
   query:string,
   setQuery:Dispatch<SetStateAction<string>>
