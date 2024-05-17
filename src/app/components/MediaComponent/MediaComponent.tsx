@@ -28,9 +28,7 @@ export default function MediaComponent() {
 
       {mediaContent}
 
-      {context.loading && (
-        <div className={styles.loadingIndicator}>Loading...</div>
-      )}
+     
     </div>
   );
 }

@@ -16,17 +16,20 @@ const ImagesContainer = (props: Props) => {
     const { photos } = props;
     const context = useContext(MediaContext);
     const [page, setPage] = useState<number>(1);
-    const [loadingMore, setLoadingMore] = useState<boolean>(false);
+    const [loadingMore, setLoadingMore] = useState<boolean>(false); // State to track if more photos are being loaded
     const client = getPexelsClient();
 
     const handleImageLoad = () => {
-        context.setLoading(false);
+        context.setLoading(false); // Update loading state when image is loaded
         console.log("Image loaded successfully");
     };
-
+useEffect(()=>{
+    fetchPhotos()
+// eslint-disable-next-line react-hooks/exhaustive-deps
+},[])
     const fetchPhotos = async () => {
-        if (loadingMore) return;
-        setLoadingMore(true);
+        if (loadingMore) return; // Avoid fetching if already loading more
+        setLoadingMore(true); // Set loading state to true while fetching photos
         try {
             const response = await client.photos.curated({ page, per_page: 15 });
             if ("photos" in response) {
@@ -39,19 +42,19 @@ const ImagesContainer = (props: Props) => {
                 }));
                 setPage((prevPage) => prevPage + 1);
             } else {
+                // Handle error response
                 console.error("Error response:", response);
             }
         } catch (error) {
+            // Handle network errors or other exceptions
             console.error("Error:", error);
         } finally {
-            setLoadingMore(false);
+            setLoadingMore(false); // Reset loading state
         }
     };
 
     useEffect(() => {
-        fetchPhotos(); // Initial fetch on mount
-
-        const handleScroll = debounce(() => {
+         const handleScroll = debounce(() => {
             if (!loadingMore && window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
                 fetchPhotos();
             }
@@ -62,13 +65,15 @@ const ImagesContainer = (props: Props) => {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-    }, []); // Empty dependency array to ensure this effect runs only once on mount
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+     }, [loadingMore, page]); // Re-run effect when loadingMore or page state changes
 
     return (
+        <>
         <div className={styles.photosContainer}>
-            {photos.photos.map((photo) => (
-                <div key={photo.id} className={styles.photoWrapper}>
-                    <div className={styles.overlay}>
+            {photos.photos.map((photo,key) => (
+                <div key={key} className={styles.photoWrapper}>
+                    <div className={styles.overlay} key={key}>
                         <Image src={download} alt="" onClick={() => handleDownload(photo.src.original)} />
                     </div>
                     <Image
@@ -77,13 +82,17 @@ const ImagesContainer = (props: Props) => {
                         width={photo.width}
                         height={photo.height}
                         className={styles.photo}
-                        layout="responsive"
-                        onLoad={handleImageLoad}
+                        layout='responsive'
+                         onLoad={handleImageLoad}
                         priority
                     />
                 </div>
             ))}
         </div>
+         {loadingMore && (
+            <div className={styles.loadingIndicator}>Loading...</div>
+          )}
+          </>
     );
 }
 
