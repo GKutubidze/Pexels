@@ -1,40 +1,38 @@
 import React, { Dispatch, SetStateAction, useContext } from "react";
 import styles from "./MediaComponent.module.css";
-import { Photo, PhotosWithTotalResults } from "pexels";
-import Image from "next/image";
-import MediaHeader from "./MediaHeader";
+  import MediaHeader from "./MediaHeader";
 import MediaNavigaton from "./MediaNavigaton";
-import { MyContext } from "@/app/Context";
+import { MediaContext } from "@/app/Context/Context";
+import ImagesContainer from "./ImagesContainer";
+import VideosContainer from "./VideosContainer";
 
 export default function MediaComponent() {
-  const context=useContext(MyContext);
- 
-  const handleImageLoad = () => {
-    context.setLoading(false); // Update loading state when image is loaded
-    console.log("Image loaded successfully");
-  };
+  const context = useContext(MediaContext);
+  let mediaContent = null;
+
+  if (context.mediaType === "Home") {
+
+    mediaContent = 
+    <>
+          <MediaHeader />
+          <ImagesContainer photos={context.photos} />;
+
+    </>
+  } else if (context.mediaType === "Videos") {
+    // Assuming VideosContainer takes similar props as ImagesContainer
+    mediaContent = <VideosContainer  />;
+  }
+
+
   return (
     <div className={styles.main}>
-      <MediaNavigaton/>
-      <MediaHeader/>
-      <div className={styles.photosContainer}>
-        {context.photos.photos.map((photo) => (
-          <div key={photo.id} className={styles.photoWrapper}>
-            <Image
-              src={photo.src.original}
-              alt=""
-              width={photo.width}
-              height={photo.height}
-              className={styles.photo}
-              layout="responsive"
-              onLoad={handleImageLoad}
-              priority
-            />
-          </div>
-        ))}
-      </div>
-      {context.loading && <div className={styles.loadingIndicator}>Loading...</div>}
+      <MediaNavigaton />
 
+      {mediaContent}
+      
+      {context.loading && (
+        <div className={styles.loadingIndicator}>Loading...</div>
+      )}
     </div>
   );
 }

@@ -1,89 +1,58 @@
-.main{
-    padding: 0 10px;
-    margin-top: 20px;
-
+.main {
+  padding: 0 10px;
+  margin-top: 20px;
 }
-
 
 /* MediaComponent.module.css */
- 
-  
-.photosContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust min-width and max-width as needed */
-  grid-gap: 20px; /* Adjust gap between grid items */
+
+
+.loadingContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
 }
 
-.photoWrapper {
-  width: 100%; /* Ensure each image fills its grid cell */
+.loader {
+  display: flex;
+  justify-content: center;
 }
 
-.photo {
-  width: 100%; /* Make images fill their container */
-  height: auto; /* Allow images to adjust their height based on aspect ratio */
+.spinner {
+  width: 12px;
+  height: 12px;
+  background-color: #333;
+  border-radius: 50%;
+  margin: 0 3px;
+  animation: spin 0.8s infinite linear;
 }
 
-
-
-
-  .loadingContainer {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
+@keyframes spin {
+  0% {
+    transform: scale(1);
   }
-  
-  .loader {
-    display: flex;
-    justify-content: center;
+  50% {
+    transform: scale(1.5);
   }
-  
-  .spinner {
-    width: 12px;
-    height: 12px;
-    background-color: #333;
-    border-radius: 50%;
-    margin: 0 3px;
-    animation: spin 0.8s infinite linear;
+  100% {
+    transform: scale(1);
   }
-  
-  @keyframes spin {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.5);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
+}
 
+.loadingIndicator {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1000; /* Ensure loading indicator is on top of other content */
+}
 
-  .loadingIndicator {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1000; /* Ensure loading indicator is on top of other content */
+@media (min-width: 768px) {
+  .main {
+    padding: 30px 15px 0 30px;
   }
-
-
-
-
-  @media (min-width: 768px) {
-    .main{
-      padding: 30px 15px 0 30px;
-  
-  }
-  
-  }
-  @media (min-width: 1024px) {
-    .photosContainer {
-      grid-template-columns: repeat(3, 1fr); /* Three images horizontally */
-    }
-  }
+}

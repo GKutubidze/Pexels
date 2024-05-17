@@ -1,0 +1,23 @@
+.videosContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  
+    grid-gap: 20px;
+  }
+  
+  .videoWrapper {
+    width: 100%;
+    position: relative;
+  }
+  
+  .video {
+    width: 100%;
+    height: auto;
+  }
+  
+  @media (min-width: 1024px) {
+    .videosContainer {
+      grid-template-columns: repeat(3, 1fr); /* Three videos horizontally */
+      columns: 3;
+    }
+  }
+  

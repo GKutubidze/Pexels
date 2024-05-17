@@ -1,17 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import styles from './MediaNavigaton.module.css';
+import { MediaContext } from '@/app/Context/Context';
+
+type MediaType = "Home" | "Videos" | 'Challenges';
+
+interface DataItem {
+  name: MediaType;
+}
 
 const MediaNavigaton = () => {
-  const [selectedItem, setSelectedItem] = useState<string>('Home');
+  const context = useContext(MediaContext);
 
-  const handleClick = (itemName:string) => {
-    setSelectedItem(itemName);
+  const handleClick = (itemName: MediaType) => {
+    context.setMediaType(itemName);
   };
 
   return (
     <div className={styles.main}>
-      {Data.map((item, key) => {
-        const isSelected = item.name === selectedItem;
+      {Data.map((item: DataItem, key: number) => {
+        const isSelected = item.name === context.mediaType;
         return (
           <div
             key={key}
@@ -28,7 +35,7 @@ const MediaNavigaton = () => {
 
 export default MediaNavigaton;
 
-const Data = [
+const Data: DataItem[] = [
   {
     name: 'Home',
   },

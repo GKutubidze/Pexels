@@ -5,56 +5,29 @@ import styles from "./SearchComponent.module.css";
 import ConditionalBoard from "./CondtionalBoard";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { useRouter } from "next/navigation";
-import { MyContext } from "@/app/Context";
-import { createClient } from "pexels";
+ import { createClient } from "pexels";
+import { MediaContext } from "@/app/Context/Context";
  type Props={
   query:string,
   setQuery:Dispatch<SetStateAction<string>>
 
  }
 const SearchComponent = ({query,setQuery}:Props) => {
-  const context=useContext(MyContext);
+  const context=useContext(MediaContext)
   const router=useRouter();
   const width=useWindowWidth();
    const [isArrowDown, setIsArrowDown] = useState<boolean>(true);
   const [showConditionalBoard, setShowConditionalBoard] =
     useState<boolean>(false);
-  const [media, setMedia] = useState<string>("Photos");
   const [isPictureClicked, setIsPictureClicked] = useState<boolean>(true);
   const [isVideoClicked, setIsVideoClicked] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>(" ");
+
   const apiKey =process.env.NEXT_PUBLIC_API_KEY as string;
 
   const client = createClient(apiKey);
-  console.log(query)
+  
 
-  const searchPhotos = async () => {
-    context.setLoading(true);
-    try {
-      const response = await client.photos.search({
-        query: searchText,
-        page: context.photos.page + 1,
-        per_page: 10
-      });
-      if ("photos" in response) {
-        context.setSearchedPhotos((prevPhotos) => ({
-          photos: [...prevPhotos.photos, ...response.photos],
-          page: response.page,
-          per_page: response.per_page,
-          total_results: response.total_results,
-          next_page: response.next_page
-        }));
-      } else {
-        // Handle error response
-        console.error("Error response:", response);
-      }
-    } catch (error) {
-      // Handle network errors or other exceptions
-      console.error("Error:", error);
-    } finally {
-      context.setLoading(false);
-    }
-  };
   
    return (
     <div className={styles.searchComponent}>
@@ -126,9 +99,9 @@ const SearchComponent = ({query,setQuery}:Props) => {
             width={25}
             height={25}
             onClick={() => {
-              setQuery(searchText);
-              searchPhotos();
-              router.push(`/search/${searchText}`);
+              setQuery(searchText.trim());
+              
+              router.push(`/search/${searchText.trim()}`);
             }}
           />
         </div>

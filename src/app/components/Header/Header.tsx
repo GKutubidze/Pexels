@@ -6,15 +6,12 @@ import SearchComponent from "../SearchComponent/SearchComponent";
 import { createClient, Photo } from "pexels";
 import { DesktopNavbar } from "../Navbar/DesktopNavbar";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
-import { MyContext } from "@/app/Context";
+import { MediaContext } from "@/app/Context/Context";
+ 
 
-type Props = {
-  query:string,
-  setQuery:Dispatch<SetStateAction<string>>
-};
 
-const Header = ({ query,setQuery }: Props) => {
-  const context=useContext(MyContext);
+const Header = () => {
+  const context=useContext(MediaContext)
   const width=useWindowWidth();
   const apiKey =process.env.NEXT_PUBLIC_API_KEY as string;
 
@@ -59,7 +56,7 @@ const Header = ({ query,setQuery }: Props) => {
           <p>
             The best free stock photos, royalty free images & videos shared by creators.
           </p>
-          <SearchComponent query={query} setQuery={setQuery} />
+          <SearchComponent query={context.query} setQuery={context.setQuery} />
           <div className={styles.photographerContainer}>
             <span className={styles.photoBy}>Photo by</span>
             <span className={styles.photographer}>
