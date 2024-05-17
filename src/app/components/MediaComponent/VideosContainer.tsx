@@ -79,7 +79,7 @@ useEffect(() => {
           <video
             src={video.video_files[0].link}
             width="100%"
-            height="auto"
+            height={video.height}
             onMouseEnter={(e) => e.currentTarget.play()}
             onMouseLeave={(e) => e.currentTarget.pause()}
             muted
