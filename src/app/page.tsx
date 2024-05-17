@@ -18,8 +18,7 @@ export default function Home() {
 
 
  
-  // Attach scroll event listener when component mounts
-  
+   
 
   return (
     <main className={styles.main}>
