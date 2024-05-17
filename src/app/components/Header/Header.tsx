@@ -40,6 +40,7 @@ const Header = () => {
   
     // Call the fetchRandomPhoto function whenever context.randomPhoto changes
     fetchRandomPhoto();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
 

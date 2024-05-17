@@ -32,12 +32,10 @@ useEffect(() => {
             }));
             setPage((prevPage) => prevPage + 1);
           } else {
-            // Handle error response
-            console.error('Error response:', response);
+             console.error('Error response:', response);
           }
         } catch (error) {
-          // Handle network errors or other exceptions
-          console.error('Error:', error);
+           console.error('Error:', error);
         } finally {
           context.setLoading(false);
         }
@@ -48,12 +46,15 @@ useEffect(() => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [context, client, page]); // Added context, client, and page as dependencies
+  }, [context, client, page]);  
      
   return (
     <div className={styles.videosContainer}>
       {context.videos.videos.map((video) => (
+        
         <div key={video.id} className={styles.videoWrapper}>
+            <div className={styles.overlay} key={video.id}>
+           </div>
           <video
             src={video.video_files[0].link}
             width="100%"
