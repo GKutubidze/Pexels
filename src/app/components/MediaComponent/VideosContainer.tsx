@@ -4,14 +4,33 @@ import { getPexelsClient } from '@/app/utils/getPexelsClient'
 import { PhotosWithTotalResults } from 'pexels'
 import React, { useContext, useEffect, useState } from 'react'
 import styles from "./VideosContainer.module.css"
+import download from "../../../../public/download.svg"
+import Image from 'next/image'
 
 const VideosContainer = () => {
     const [page, setPage] = useState<number>(1);
     const context=useContext(MediaContext);
 
+    const handleDownload = (url: string) => {
+        fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            // Create a temporary URL for the blob
+            const blobUrl = window.URL.createObjectURL(new Blob([blob]));
+      
+            // Create an anchor element
+            const link = document.createElement("a");
+            link.href = blobUrl;
+            link.download = "image.jpg"; // You can set the desired file name here
+            link.click();
+      
+            // Clean up
+            window.URL.revokeObjectURL(blobUrl);
+          })
+          .catch(error => console.error('Download failed', error));
+      };
     const client=getPexelsClient();
-console.log(context.videos)
-   
+    
 useEffect(() => {
     const handleScroll = async () => {
       if (
@@ -54,6 +73,8 @@ useEffect(() => {
         
         <div key={video.id} className={styles.videoWrapper}>
             <div className={styles.overlay} key={video.id}>
+            <Image src={download} alt="" onClick={() => handleDownload(video.url)}/>
+
            </div>
           <video
             src={video.video_files[0].link}

@@ -1,7 +1,6 @@
 .videosContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  
-    grid-gap: 20px;
+  columns: 2;
+
   }
   
   .videoWrapper {
@@ -13,7 +12,14 @@
     width: 100%;
     height: auto;
   }
-  
+  .downloadIcon {
+    width: 40px;
+    height: 40px;
+    stroke: white;
+    stroke-width: 2;
+    fill: none;
+  }
+
 
   .overlay {
     position: absolute;
@@ -27,8 +33,8 @@
   
   
   @media (min-width: 1024px) {
-    .videosContainer {
-      grid-template-columns: repeat(3, 1fr); /* Three videos horizontally */
+    .photosContainer {
+      grid-template-columns: repeat(3, 1fr); /* Three images horizontally */
       columns: 3;
     }
   }
