@@ -82,7 +82,7 @@ const ImagesContainer = ({ photos }: Props) => {
                     width={photo.width}
                     height={photo.height}
                     className={styles.photo}
-                    layout='responsive'
+                     
                     onLoad={handleImageLoad}
                     priority
                 />

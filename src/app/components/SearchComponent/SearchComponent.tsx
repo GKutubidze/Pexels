@@ -100,8 +100,9 @@ const SearchComponent = ({query,setQuery}:Props) => {
             height={25}
             onClick={() => {
               setQuery(searchText.trim());
+              context.setMediaType("");
               
-              router.push(`/search/${searchText.trim()}`);
+              
             }}
           />
         </div>

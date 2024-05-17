@@ -5,6 +5,7 @@ import MediaNavigaton from "./MediaNavigaton";
 import { MediaContext } from "@/app/Context/MediaContext";
 import ImagesContainer from "./ImagesContainer";
 import VideosContainer from "./VideosContainer";
+import { SearchMedia } from "../SearchComponent/SearchMedia";
 
 export default function MediaComponent() {
   const context = useContext(MediaContext);
@@ -20,6 +21,8 @@ export default function MediaComponent() {
   } else if (context.mediaType === "Videos") {
     // Assuming VideosContainer takes similar props as ImagesContainer
     mediaContent = <VideosContainer />;
+  } else if (context.mediaType === "") {
+    mediaContent = <SearchMedia />;
   }
 
   return (
@@ -27,8 +30,6 @@ export default function MediaComponent() {
       <MediaNavigaton />
 
       {mediaContent}
-
-     
     </div>
   );
 }
