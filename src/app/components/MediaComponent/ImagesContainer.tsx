@@ -1,5 +1,5 @@
 'use client'
-import React, { memo, useContext, useEffect, useState } from 'react';
+import React, { memo, useContext, useEffect, useState, useMemo } from 'react';
 import styles from "./ImagesContainer.module.css";
 import Image from 'next/image';
 import download from "../../../../public/download.svg";
@@ -12,8 +12,7 @@ type Props = {
     photos: PhotosWithTotalResults;
 }
 
-const ImagesContainer = (props: Props) => {
-    const { photos } = props;
+const ImagesContainer = ({ photos }: Props) => {
     const context = useContext(MediaContext);
     const [page, setPage] = useState<number>(1);
     const [loadingMore, setLoadingMore] = useState<boolean>(false); // State to track if more photos are being loaded
@@ -23,10 +22,12 @@ const ImagesContainer = (props: Props) => {
         context.setLoading(false); // Update loading state when image is loaded
         console.log("Image loaded successfully");
     };
-useEffect(()=>{
-    fetchPhotos()
-// eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
+
+    useEffect(() => {
+        fetchPhotos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const fetchPhotos = async () => {
         if (loadingMore) return; // Avoid fetching if already loading more
         setLoadingMore(true); // Set loading state to true while fetching photos
@@ -54,7 +55,7 @@ useEffect(()=>{
     };
 
     useEffect(() => {
-         const handleScroll = debounce(() => {
+        const handleScroll = debounce(() => {
             if (!loadingMore && window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
                 fetchPhotos();
             }
@@ -65,34 +66,40 @@ useEffect(()=>{
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [loadingMore, page]); // Re-run effect when loadingMore or page state changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadingMore, page]); // Re-run effect when loadingMore or page state changes
+
+    // Memoize the result of photos.map operation
+    const memoizedPhotos = useMemo(() => {
+        return photos.photos.map((photo, key) => (
+            <div key={key} className={styles.photoWrapper}>
+                <div className={styles.overlay} key={key}>
+                    <Image src={download} alt="" onClick={() => handleDownload(photo.src.original)} />
+                </div>
+                <Image
+                    src={photo.src.original}
+                    alt=""
+                    width={photo.width}
+                    height={photo.height}
+                    className={styles.photo}
+                    layout='responsive'
+                    onLoad={handleImageLoad}
+                    priority
+                />
+            </div>
+        ));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [photos.photos]);
 
     return (
         <>
-        <div className={styles.photosContainer}>
-            {photos.photos.map((photo,key) => (
-                <div key={key} className={styles.photoWrapper}>
-                    <div className={styles.overlay} key={key}>
-                        <Image src={download} alt="" onClick={() => handleDownload(photo.src.original)} />
-                    </div>
-                    <Image
-                        src={photo.src.original}
-                        alt=""
-                        width={photo.width}
-                        height={photo.height}
-                        className={styles.photo}
-                        layout='responsive'
-                         onLoad={handleImageLoad}
-                        priority
-                    />
-                </div>
-            ))}
-        </div>
-         {loadingMore && (
-            <div className={styles.loadingIndicator}>Loading...</div>
-          )}
-          </>
+            <div className={styles.photosContainer}>
+                {memoizedPhotos}
+            </div>
+            {loadingMore && (
+                <div className={styles.loadingIndicator}>Loading...</div>
+            )}
+        </>
     );
 }
 

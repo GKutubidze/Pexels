@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { Photo, PhotosWithTotalResults } from "pexels";
-type MediaType = "Home" | "Videos" | 'Challenges';
+type MediaType = "Home" | "Videos" | 'Challenges' | "";
 
 export interface VideoFile {
   id: number;
