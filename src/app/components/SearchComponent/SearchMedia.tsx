@@ -1,11 +1,11 @@
 "use client";
-import { MediaContext } from "@/app/Context/MediaContext";
+import { MediaContext, useMediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
-import React, { useContext, useEffect, useState } from "react";
+import React, {   useEffect, useState } from "react";
 import ImagesContainer from "../MediaComponent/ImagesContainer";
 
 export const SearchMedia = () => {
-  const context = useContext(MediaContext);
+  const context=useMediaContext()
   const [page, setPage] = useState<number>(1);
   const client = getPexelsClient();
 
@@ -53,6 +53,7 @@ export const SearchMedia = () => {
 
   useEffect(() => {
     searchPhotos();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.query, page]);
 
   useEffect(() => {

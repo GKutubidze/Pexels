@@ -1,8 +1,8 @@
 .photosContainer {
-    /* display: grid;
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  
-    grid-gap: 20px;   */
-    columns: 2;
+    grid-gap: 20px;  
+    /* columns: 2; */
   }
   
   .photoWrapper {
@@ -39,7 +39,7 @@
   @media (min-width: 1024px) {
     .photosContainer {
       grid-template-columns: repeat(3, 1fr); /* Three images horizontally */
-      columns: 3;
+      /* columns: 3; */
     }
   }
   

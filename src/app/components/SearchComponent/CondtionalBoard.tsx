@@ -1,21 +1,14 @@
 import React from "react";
 import styles from "./ConditionalBoard.module.css";
 import Image from "next/image";
+import { useMediaContext } from "@/app/Context/MediaContext";
 
 type Props = {
   setShowConditionalBoard: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsPictureClicked: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsVideoClicked: React.Dispatch<React.SetStateAction<boolean>>;
-  isPictureClicked: boolean;
-  isVideoClicked: boolean;
 };
-const ConditionalBoard = ({
-  setShowConditionalBoard,
-  setIsPictureClicked,
-  setIsVideoClicked,
-  isPictureClicked,
-  isVideoClicked,
-}: Props) => {
+const ConditionalBoard = ({ setShowConditionalBoard }: Props) => {
+  const context = useMediaContext();
+
   return (
     <div
       className={styles.main}
@@ -30,11 +23,13 @@ const ConditionalBoard = ({
         <Image src="/picture-icon.svg" alt="picture" width={20} height={20} />
         <p
           onClick={() => {
-            setIsPictureClicked(true);
-            setIsVideoClicked(false);
+            context.setSearchType("Photos");
           }}
-
-          style={isPictureClicked ? {color:"green"} :{color:"black"}}
+          style={
+            context.searchType === "Photos"
+              ? { color: "green" }
+              : { color: "black" }
+          }
         >
           Photos
         </p>
@@ -44,11 +39,13 @@ const ConditionalBoard = ({
         <Image src="/video-icon.svg" alt="vidoe" width={20} height={20} />
         <p
           onClick={() => {
-            setIsPictureClicked(false);
-            setIsVideoClicked(true);
+            context.setSearchType("Videos");
           }}
-          style={isVideoClicked ? {color:"green"} :{color:"black"}}
-
+          style={
+            context.searchType === "Videos"
+              ? { color: "green" }
+              : { color: "black" }
+          }
         >
           Videos
         </p>

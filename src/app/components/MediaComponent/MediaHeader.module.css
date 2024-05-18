@@ -44,6 +44,7 @@
   align-items: baseline;
   justify-content: space-around;
   min-height: 100px;
+  z-index: 1000;
 }
 .child {
   display: flex;

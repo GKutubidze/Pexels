@@ -6,7 +6,7 @@ import up from '../../../../public/icon-up.svg';
 import correct from '../../../../public/correct.svg';
 import Image from 'next/image';
 
-const MediaHeader = () => {
+const MediaHeader = ({title}:{title:string}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>('Trending');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -36,7 +36,7 @@ const MediaHeader = () => {
   return (
     <div className={styles.header}>
       <div className={styles.title}>
-        <p>Free Stock Photos</p>
+        <p>{title}</p>
       </div>
       <div className={styles.trendingContainer} onClick={toggleDropdown} ref={dropdownRef}>
         <p>{selectedOption}</p>

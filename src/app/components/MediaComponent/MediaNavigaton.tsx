@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styles from './MediaNavigaton.module.css';
-import { MediaContext } from '@/app/Context/MediaContext';
+import {  useMediaContext } from '@/app/Context/MediaContext';
 
 type MediaType = "Home" | "Videos" | 'Challenges';
 
@@ -9,7 +9,7 @@ interface DataItem {
 }
 
 const MediaNavigaton = () => {
-  const context = useContext(MediaContext);
+  const context=useMediaContext()
 
   const handleClick = (itemName: MediaType) => {
     context.setMediaType(itemName);

@@ -6,12 +6,12 @@ import SearchComponent from "../SearchComponent/SearchComponent";
 import { createClient, Photo } from "pexels";
 import { DesktopNavbar } from "../Navbar/DesktopNavbar";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
-import { MediaContext } from "@/app/Context/MediaContext";
+import {useMediaContext } from "@/app/Context/MediaContext";
  
 
 
 const Header = () => {
-  const context=useContext(MediaContext)
+  const context=useMediaContext()
   const width=useWindowWidth();
   const apiKey =process.env.NEXT_PUBLIC_API_KEY as string;
 

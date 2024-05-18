@@ -1,43 +1,8 @@
-import { createContext, Dispatch, SetStateAction, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 import { Photo, PhotosWithTotalResults } from "pexels";
-type MediaType = "Home" | "Videos" | 'Challenges' | "";
+import { MediaType, SearchType, VideosWithTotalResults } from "../Types";
 
-export interface VideoFile {
-  id: number;
-  quality: string;
-  file_type: string;
-  width: number | null;
-  height: number | null;
-  link: string;
-}
 
-export interface Video {
-  id: number;
-  width: number;
-  height: number;
-  url: string;
-  image: string;
-  duration: number;
-  user: {
-    id: number;
-    name: string;
-    url: string;
-  };
-  video_files: VideoFile[];
-  video_pictures: {
-    id: number;
-    picture: string;
-    nr: number;
-  }[];
-}
-
-export interface VideosWithTotalResults {
-  page: number;
-  per_page: number;
-  total_results: number;
-  url?: string;
-  videos: Video[];
-}
 
 export interface Props {
   searchedPhotos: PhotosWithTotalResults;
@@ -54,6 +19,10 @@ export interface Props {
   setMediaType: Dispatch<SetStateAction<MediaType>>,
   videos: VideosWithTotalResults;
   setVideos: Dispatch<SetStateAction<VideosWithTotalResults>>;
+  searchedVideos: VideosWithTotalResults;
+  setSearchedVideos: Dispatch<SetStateAction<VideosWithTotalResults>>;
+  searchType:SearchType;
+  setSearchType:Dispatch<SetStateAction<SearchType>>;
 
 
 }
@@ -91,6 +60,16 @@ const defaultContextValues: Props = {
     videos: [],
   },
   setVideos: () => {},
+  searchedVideos: {
+    page: 0,
+    per_page: 0,
+    total_results: 0,
+    videos: [],
+  },
+  setSearchedVideos: () => {},
+  searchType:"Photos",
+  setSearchType: () => {},
+
 };
 
 // Create the context and provide default values
@@ -116,6 +95,11 @@ export const MediaContextProvider = ({ children }: React.PropsWithChildren<{}>) 
   const [videos, setVideos] = useState<VideosWithTotalResults>(
     defaultContextValues.videos
   );
+
+  const [searchedVideos, setSearchedVideos] = useState<VideosWithTotalResults>(
+    defaultContextValues.searchedVideos
+  );
+  const [searchType,setSearchType]=useState<SearchType>("Photos");
   return (
     <MediaContext.Provider
       value={{
@@ -132,7 +116,11 @@ export const MediaContextProvider = ({ children }: React.PropsWithChildren<{}>) 
         mediaType,
         setMediaType,
         videos,
-        setVideos
+        setVideos,
+        searchedVideos,
+        setSearchedVideos,
+        searchType,
+        setSearchType
       }}
     >
       {children}
@@ -141,4 +129,12 @@ export const MediaContextProvider = ({ children }: React.PropsWithChildren<{}>) 
 };
 
 
- 
+export function useMediaContext() {
+  const context = useContext(MediaContext);
+
+  if (!context) {
+    throw new Error("useMediaContext must be used within a MediaContextProvider");
+  }
+
+  return context;
+}

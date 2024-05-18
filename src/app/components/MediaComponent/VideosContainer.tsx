@@ -1,34 +1,18 @@
 'use client'
-import { MediaContext } from '@/app/Context/MediaContext'
+import {   useMediaContext } from '@/app/Context/MediaContext'
 import { getPexelsClient } from '@/app/utils/getPexelsClient'
 import { PhotosWithTotalResults } from 'pexels'
 import React, { useContext, useEffect, useState } from 'react'
 import styles from "./VideosContainer.module.css"
 import download from "../../../../public/download.svg"
 import Image from 'next/image'
+import MediaHeader from './MediaHeader'
 
 const VideosContainer = () => {
     const [page, setPage] = useState<number>(1);
-    const context=useContext(MediaContext);
+    const context=useMediaContext()
 
-    const handleDownload = (url: string) => {
-        fetch(url)
-          .then(response => response.blob())
-          .then(blob => {
-            // Create a temporary URL for the blob
-            const blobUrl = window.URL.createObjectURL(new Blob([blob]));
-      
-            // Create an anchor element
-            const link = document.createElement("a");
-            link.href = blobUrl;
-            link.download = "image.jpg"; // You can set the desired file name here
-            link.click();
-      
-            // Clean up
-            window.URL.revokeObjectURL(blobUrl);
-          })
-          .catch(error => console.error('Download failed', error));
-      };
+ 
     const client=getPexelsClient();
     
 useEffect(() => {
@@ -68,27 +52,33 @@ useEffect(() => {
   }, [context, client, page]);  
      
   return (
-    <div className={styles.videosContainer}>
-      {context.videos.videos.map((video) => (
-        
-        <div key={video.id} className={styles.videoWrapper}>
-            <div className={styles.overlay} key={video.id}>
-            <Image src={download} alt="" onClick={() => handleDownload(video.url)}/>
 
-           </div>
-          <video
-            src={video.video_files[0].link}
-            width="100%"
-            height={video.height}
-            onMouseEnter={(e) => e.currentTarget.play()}
-            onMouseLeave={(e) => e.currentTarget.pause()}
-            muted
-            loop
-            className={styles.video}
-          />
-        </div>
-      ))}
+    <div>
+      <MediaHeader title='Trending Free Stock Videos'/>
+      <div className={styles.videosContainer}>
+      
+      {context.videos.videos.map((video) => (
+       
+       <div key={video.id} className={styles.videoWrapper}>
+           <div className={styles.overlay} key={video.id}>
+           <Image src={download} alt="" onClick={() => window.open(video.video_files[0].link, '_blank')}/>
+
+          </div>
+         <video
+           src={video.video_files[0].link}
+           width="100%"
+           height={video.height}
+           onMouseEnter={(e) => e.currentTarget.play()}
+           onMouseLeave={(e) => e.currentTarget.pause()}
+           muted
+           loop
+           className={styles.video}
+         />
+       </div>
+     ))}
+   </div>
     </div>
+   
   );
 };
 

@@ -1,0 +1,39 @@
+.videosContainer {
+  columns: 2;
+}
+
+.videoWrapper {
+  width: 100%;
+  position: relative;
+}
+
+.video {
+  width: 100%;
+  height: auto;
+}
+.downloadIcon {
+  width: 15px;
+  height: 15px;
+  stroke: white;
+  stroke-width: 2;
+  fill: none;
+  cursor: pointer;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 8px;
+  right: 5px;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.64);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+@media (min-width: 1024px) {
+  .photosContainer {
+    grid-template-columns: repeat(3, 1fr); /* Three images horizontally */
+    columns: 3;
+  }
+}
