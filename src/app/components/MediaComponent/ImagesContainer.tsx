@@ -56,14 +56,14 @@ const ImagesContainer = ({ photos }: Props) => {
   };
 
   useEffect(() => {
-    const handleScroll = debounce(() => {
+    const handleScroll = () => {
       if (
         !loadingMore &&
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 500
       ) {
         fetchPhotos();
       }
-    }, 200);
+    };
 
     window.addEventListener("scroll", handleScroll);
 
@@ -73,79 +73,29 @@ const ImagesContainer = ({ photos }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingMore, page]);
 
-  // Setup IntersectionObserver for lazy loading images
-  const lastPhotoElementRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (observer.current) observer.current.disconnect();
-
-    observer.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !loadingMore) {
-        fetchPhotos();
-      }
-    });
-
-    if (lastPhotoElementRef.current) {
-      observer.current.observe(lastPhotoElementRef.current);
-    }
-
-    return () => {
-      if (observer.current) observer.current.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingMore]);
-
   const memoizedPhotos = useMemo(() => {
-    return photos.photos.map((photo, index) => {
-      if (index === photos.photos.length - 1) {
-        return (
-          <div
-            key={photo.id}
-            ref={lastPhotoElementRef}
-            className={styles.photoWrapper}
-          >
-            <div className={styles.overlay}>
-              <Image
-                src={download}
-                alt=""
-                onClick={() => handleDownload(photo.src.original)}
-              />
-            </div>
-            <Image
-              src={photo.src.original}
-              alt={photo.alt || ""}
-              width={500}
-              height={500}
-              className={styles.photo}
-              layout="responsive"
-              onLoad={handleImageLoad}
-              priority
-            />
-          </div>
-        );
-      } else {
-        return (
-          <div key={photo.id} className={styles.photoWrapper}>
-            <div className={styles.overlay}>
-              <Image
-                src={download}
-                alt=""
-                onClick={() => handleDownload(photo.src.original)}
-              />
-            </div>
-            <Image
-              src={photo.src.original}
-              alt={photo.alt || ""}
-              width={500}
-              height={500}
-              className={styles.photo}
-              layout="responsive"
-              onLoad={handleImageLoad}
-              priority
-            />
-          </div>
-        );
-      }
-    });
+    return photos.photos.map((photo) => (
+      <div key={photo.id} className={styles.photoWrapper}>
+        <div className={styles.overlay}
+ >
+          <Image
+            src={download}
+            alt=""
+            onClick={() => handleDownload(photo.src.original)}
+          />
+        </div>
+        <Image
+          src={photo.src.original}
+          alt={photo.alt || ""}
+          width={500}
+          height={500}
+          className={styles.photo}
+          layout="responsive"
+          onLoad={handleImageLoad}
+          priority
+        />
+      </div>
+    ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photos.photos]);
 
@@ -158,15 +108,3 @@ const ImagesContainer = ({ photos }: Props) => {
 };
 
 export default ImagesContainer;
-
-function debounce(func: Function, wait: number) {
-  let timeout: ReturnType<typeof setTimeout>;
-  return function executedFunction(...args: any[]) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}

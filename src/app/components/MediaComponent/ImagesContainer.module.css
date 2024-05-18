@@ -3,11 +3,15 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  
     grid-gap: 20px;  
     /* columns: 2; */
+
+  
   }
   
   .photoWrapper {
     width: 100%;
     position: relative;
+    break-inside: avoid;
+    
   }
   
   .photo {
@@ -15,9 +19,9 @@
     height: auto;
   }
   
-  .overlay {
+   .overlay {
     position: absolute;
-    bottom: 10px;
+    top: 10px;
     right: 5px;
     padding: 5px;
     background-color:rgba(0, 0, 0, .64);
@@ -38,8 +42,8 @@
   
   @media (min-width: 1024px) {
     .photosContainer {
-      grid-template-columns: repeat(3, 1fr); /* Three images horizontally */
-      /* columns: 3; */
+      grid-template-columns: repeat(3, 1fr);  
+      columns: 3;
     }
   }
   
