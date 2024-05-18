@@ -22,10 +22,8 @@ const Header = () => {
     const fetchRandomPhoto = async () => {
       setLoading(true);
       try {
-        // Generate a random page number
         const randomPage = Math.floor(Math.random() * 100) + 1; // Adjust the range as needed
   
-        // Fetch a random photo from the random page
         const response = await client.photos.curated({ page: randomPage, per_page: 1 });
   
         if ('photos' in response && response.photos.length > 0) {
@@ -38,7 +36,6 @@ const Header = () => {
       }
     };
   
-    // Call the fetchRandomPhoto function whenever context.randomPhoto changes
     fetchRandomPhoto();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -66,7 +63,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {/* Conditionally render loading indicator */}
       { loading && (
         <div className={styles['placeholder-overlay']}>
           <div className={styles.spinner}></div>

@@ -7,17 +7,14 @@ import download from "../../../../public/download.svg"
 import styles from "./SearchVideo.module.css"
  
 const SearchVideo = () => {
-  // utils/handleDownload.ts
- // utils/handleDownload.ts
- 
+  
 
 
   const context = useMediaContext();
   const [page, setPage] = useState<number>(1);
   const client = getPexelsClient();
-   const searchVideos = async () => {
-    // context.setLoading(true);
-    try {
+    const searchVideos = async () => {
+     try {
       const response = await client.videos.search({
         query: context.query,
         page: page,
@@ -84,7 +81,9 @@ const SearchVideo = () => {
        
        <div key={video.id} className={styles.videoWrapper}>
            <div className={styles.overlay} key={video.id}>
-           <Image src={download} alt=""  onClick={() => window.open(video.video_files[0].link, '_blank')} className={styles.downloadIcon}/>
+           <Image src={download} alt=""  onClick={() => window.open(video.video_files[0].link, '_blank')} className={styles.downloadIcon}
+           priority
+           />
 
           </div>
          <video

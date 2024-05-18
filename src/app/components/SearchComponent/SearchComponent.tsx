@@ -2,8 +2,6 @@
 import React, {
   Dispatch,
   SetStateAction,
-  useContext,
-  useEffect,
   useState,
 } from "react";
 import Image from "next/image";
@@ -21,8 +19,6 @@ const SearchComponent = ({ query, setQuery }: Props) => {
   const [isArrowDown, setIsArrowDown] = useState<boolean>(true);
   const [showConditionalBoard, setShowConditionalBoard] =
     useState<boolean>(false);
-  const [isPictureClicked, setIsPictureClicked] = useState<boolean>(true);
-  const [isVideoClicked, setIsVideoClicked] = useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>(" ");
 
   return (
@@ -79,7 +75,14 @@ const SearchComponent = ({ query, setQuery }: Props) => {
           onChange={(e) => {
             setSearchText(e.target.value);
           }}
+          
           value={searchText}
+          onKeyDown={(e)=>{
+            if(e.key=="Enter"){
+              setQuery(searchText.trim());
+              context.setMediaType("");
+            }
+          }}
         />
 
         <div className={styles.searchIconWrapper}>

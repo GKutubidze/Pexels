@@ -17,7 +17,6 @@ const ImagesContainer = ({ photos }: Props) => {
   const [page, setPage] = useState<number>(1);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const client = getPexelsClient();
-  const observer = useRef<IntersectionObserver | null>(null);
 
   const handleImageLoad = () => {
     console.log("Image loaded successfully");
@@ -74,10 +73,9 @@ const ImagesContainer = ({ photos }: Props) => {
   }, [loadingMore, page]);
 
   const memoizedPhotos = useMemo(() => {
-    return photos.photos.map((photo,key) => (
-      <div key={key} className={styles.photoWrapper}>
-        <div className={styles.overlay}
- >
+    return photos.photos.map((photo, index) => (
+      <div key={index} className={styles.photoWrapper}>
+        <div className={styles.overlay}>
           <Image
             src={download}
             alt=""
@@ -91,7 +89,7 @@ const ImagesContainer = ({ photos }: Props) => {
           height={500}
           className={styles.photo}
           onLoad={handleImageLoad}
-          priority
+          loading="lazy"
         />
       </div>
     ));
@@ -99,10 +97,10 @@ const ImagesContainer = ({ photos }: Props) => {
   }, [photos.photos]);
 
   return (
-    <>
-      <div className={styles.photosContainer}>{memoizedPhotos}</div>
+    <div className={styles.photosContainer}>
+      {memoizedPhotos}
       {loadingMore && <div className={styles.loadingIndicator}>Loading...</div>}
-    </>
+    </div>
   );
 };
 

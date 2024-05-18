@@ -1,10 +1,8 @@
-import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
+import React, { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
 import { Photo, PhotosWithTotalResults } from "pexels";
 import { MediaType, SearchType, VideosWithTotalResults } from "../Types";
 
-
-
-export interface Props {
+interface Props {
   searchedPhotos: PhotosWithTotalResults;
   setSearchedPhotos: Dispatch<SetStateAction<PhotosWithTotalResults>>;
   photos: PhotosWithTotalResults;
@@ -13,21 +11,18 @@ export interface Props {
   setLoading: Dispatch<SetStateAction<boolean>>;
   randomPhoto: Photo | undefined;
   setRandomPhoto: Dispatch<SetStateAction<Photo | undefined>>;
-  query:string,
+  query: string;
   setQuery: Dispatch<SetStateAction<string>>;
-  mediaType:MediaType;
-  setMediaType: Dispatch<SetStateAction<MediaType>>,
+  mediaType: MediaType;
+  setMediaType: Dispatch<SetStateAction<MediaType>>;
   videos: VideosWithTotalResults;
   setVideos: Dispatch<SetStateAction<VideosWithTotalResults>>;
   searchedVideos: VideosWithTotalResults;
   setSearchedVideos: Dispatch<SetStateAction<VideosWithTotalResults>>;
-  searchType:SearchType;
-  setSearchType:Dispatch<SetStateAction<SearchType>>;
-
-
+  searchType: SearchType;
+  setSearchType: Dispatch<SetStateAction<SearchType>>;
 }
 
-// Default values for context props
 const defaultContextValues: Props = {
   searchedPhotos: {
     photos: [],
@@ -49,10 +44,10 @@ const defaultContextValues: Props = {
   setLoading: () => {},
   randomPhoto: undefined,
   setRandomPhoto: () => {},
-  query:"",
+  query: "",
   setQuery: () => {},
-  mediaType:"Home",
-  setMediaType:() => {},
+  mediaType: "Home",
+  setMediaType: () => {},
   videos: {
     page: 0,
     per_page: 0,
@@ -67,39 +62,23 @@ const defaultContextValues: Props = {
     videos: [],
   },
   setSearchedVideos: () => {},
-  searchType:"Photos",
+  searchType: "Photos",
   setSearchType: () => {},
-
 };
 
-// Create the context and provide default values
 export const MediaContext = createContext<Props>(defaultContextValues);
 
-
-export const MediaContextProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const [mediaType,setMediaType]=useState<MediaType>("Home");
-  const [searchedPhotos, setSearchedPhotos] = useState<PhotosWithTotalResults>(
-    defaultContextValues.searchedPhotos
-  );
-
-  const [photos, setPhotos] = useState<PhotosWithTotalResults>(
-    defaultContextValues.photos
-  );
+export const MediaContextProvider = React.memo(function MediaContextProvider({ children }: React.PropsWithChildren<{}>) {
+  const [mediaType, setMediaType] = useState<MediaType>("Home");
+  const [searchedPhotos, setSearchedPhotos] = useState<PhotosWithTotalResults>(defaultContextValues.searchedPhotos);
+  const [photos, setPhotos] = useState<PhotosWithTotalResults>(defaultContextValues.photos);
   const [query, setQuery] = useState<string>("");
-
   const [loading, setLoading] = useState<boolean>(defaultContextValues.loading);
-  const [randomPhoto, setRandomPhoto] = useState<Photo | undefined>(
-    defaultContextValues.randomPhoto
-  );
+  const [randomPhoto, setRandomPhoto] = useState<Photo | undefined>(defaultContextValues.randomPhoto);
+  const [videos, setVideos] = useState<VideosWithTotalResults>(defaultContextValues.videos);
+  const [searchedVideos, setSearchedVideos] = useState<VideosWithTotalResults>(defaultContextValues.searchedVideos);
+  const [searchType, setSearchType] = useState<SearchType>("Photos");
 
-  const [videos, setVideos] = useState<VideosWithTotalResults>(
-    defaultContextValues.videos
-  );
-
-  const [searchedVideos, setSearchedVideos] = useState<VideosWithTotalResults>(
-    defaultContextValues.searchedVideos
-  );
-  const [searchType,setSearchType]=useState<SearchType>("Photos");
   return (
     <MediaContext.Provider
       value={{
@@ -126,7 +105,9 @@ export const MediaContextProvider = ({ children }: React.PropsWithChildren<{}>) 
       {children}
     </MediaContext.Provider>
   );
-};
+});
+
+export default MediaContextProvider;
 
 
 export function useMediaContext() {
