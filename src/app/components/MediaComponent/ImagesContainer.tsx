@@ -74,8 +74,8 @@ const ImagesContainer = ({ photos }: Props) => {
   }, [loadingMore, page]);
 
   const memoizedPhotos = useMemo(() => {
-    return photos.photos.map((photo) => (
-      <div key={photo.id} className={styles.photoWrapper}>
+    return photos.photos.map((photo,key) => (
+      <div key={key} className={styles.photoWrapper}>
         <div className={styles.overlay}
  >
           <Image
@@ -90,7 +90,6 @@ const ImagesContainer = ({ photos }: Props) => {
           width={500}
           height={500}
           className={styles.photo}
-          layout="responsive"
           onLoad={handleImageLoad}
           priority
         />
