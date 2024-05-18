@@ -1,20 +1,17 @@
-'use client';
-import { useMediaContext } from '@/app/Context/MediaContext';
-import { getPexelsClient } from '@/app/utils/getPexelsClient';
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import download from "../../../../public/download.svg"
-import styles from "./SearchVideo.module.css"
- 
+"use client";
+import { useMediaContext } from "@/app/Context/MediaContext";
+import { getPexelsClient } from "@/app/utils/getPexelsClient";
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import download from "../../../../public/download.svg";
+import styles from "./SearchVideo.module.css";
+
 const SearchVideo = () => {
-  
-
-
   const context = useMediaContext();
   const [page, setPage] = useState<number>(1);
   const client = getPexelsClient();
-    const searchVideos = async () => {
-     try {
+  const searchVideos = async () => {
+    try {
       const response = await client.videos.search({
         query: context.query,
         page: page,
@@ -22,7 +19,6 @@ const SearchVideo = () => {
       });
       if ("videos" in response) {
         if (page === 1) {
-          // If it's the first page of a new query, replace the existing videos
           context.setSearchedVideos({
             videos: response.videos,
             page: response.page,
@@ -31,7 +27,6 @@ const SearchVideo = () => {
             url: response.url,
           });
         } else {
-          // If it's a subsequent page, append the new videos
           context.setSearchedVideos((prevVideos) => ({
             videos: [...prevVideos.videos, ...response.videos],
             page: response.page,
@@ -46,12 +41,12 @@ const SearchVideo = () => {
     } catch (error) {
       console.error("Error:", error);
     } finally {
-      // context.setLoading(false);
+     
     }
   };
 
   useEffect(() => {
-    setPage(1); // Reset page to 1 when query changes
+    setPage(1); 
   }, [context.query]);
 
   useEffect(() => {
@@ -77,27 +72,29 @@ const SearchVideo = () => {
 
   return (
     <div className={styles.videosContainer}>
-    {context.searchedVideos.videos.map((video) => (
-       
-       <div key={video.id} className={styles.videoWrapper}>
-           <div className={styles.overlay} key={video.id}>
-           <Image src={download} alt=""  onClick={() => window.open(video.video_files[0].link, '_blank')} className={styles.downloadIcon}
-           priority
-           />
-
+      {context.searchedVideos.videos.map((video) => (
+        <div key={video.id} className={styles.videoWrapper}>
+          <div className={styles.overlay} key={video.id}>
+            <Image
+              src={download}
+              alt=""
+              onClick={() => window.open(video.video_files[0].link, "_blank")}
+              className={styles.downloadIcon}
+              priority
+            />
           </div>
-         <video
-           src={video.video_files[0].link}
-           width="100%"
-           height={video.height}
-           onMouseEnter={(e) => e.currentTarget.play()}
-           onMouseLeave={(e) => e.currentTarget.pause()}
-           muted
-           loop
-           className={styles.video}
-         />
-       </div>
-     ))}
+          <video
+            src={video.video_files[0].link}
+            width="100%"
+            height={video.height}
+            onMouseEnter={(e) => e.currentTarget.play()}
+            onMouseLeave={(e) => e.currentTarget.pause()}
+            muted
+            loop
+            className={styles.video}
+          />
+        </div>
+      ))}
       {/* {context.loading && <p>Loading...</p>} */}
     </div>
   );

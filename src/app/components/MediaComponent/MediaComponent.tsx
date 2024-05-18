@@ -20,7 +20,6 @@ export default function MediaComponent() {
       </>
     );
   } else if (context.mediaType === "Videos" && context.query!=" ") {
-    // Assuming VideosContainer takes similar props as ImagesContainer
     mediaContent = <VideosContainer />;
   } else if (context.mediaType === "" && context.searchType==="Photos") {
     mediaContent = <SearchMedia />;

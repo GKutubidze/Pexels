@@ -67,6 +67,7 @@ export const SearchMedia = () => {
     if (context.query.trim() !== "") {
       searchPhotos(context.query, page);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.query, page]);
 
   useEffect(() => {

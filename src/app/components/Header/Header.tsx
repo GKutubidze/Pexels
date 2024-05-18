@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useState } from
 import styles from "./Header.module.css";
 import Navbar from "../Navbar/Navbar";
 import SearchComponent from "../SearchComponent/SearchComponent";
-import { createClient, Photo } from "pexels";
+import { createClient} from "pexels";
 import { DesktopNavbar } from "../Navbar/DesktopNavbar";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import {useMediaContext } from "@/app/Context/MediaContext";
