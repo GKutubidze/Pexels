@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import styles from './MediaNavigaton.module.css';
 import {  useMediaContext } from '@/app/Context/MediaContext';
+import { MediaType } from '@/app/Types';
 
-type MediaType = "Home" | "Videos" | 'Challenges';
-
+ 
 interface DataItem {
   name: MediaType;
 }
@@ -43,6 +43,6 @@ const Data: DataItem[] = [
     name: 'Videos',
   },
   {
-    name: 'Challenges',
+    name: 'Liked',
   },
 ];

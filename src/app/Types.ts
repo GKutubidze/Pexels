@@ -30,7 +30,7 @@
 //   next_page: string | null; // Update type to match actual response
 // }
 
-export type MediaType = "Home" | "Videos" | 'Challenges' | "";
+export type MediaType = "Home" | "Videos" | 'Liked' | "";
 
 export type SearchType ="Photos" | "Videos";
 export interface VideoFile {

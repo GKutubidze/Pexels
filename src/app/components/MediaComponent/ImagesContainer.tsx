@@ -7,16 +7,35 @@ import { MediaContext } from "@/app/Context/MediaContext";
 import { PhotosWithTotalResults } from "pexels";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import { handleDownload } from "@/app/utils/handleDownload";
+import heart from "../../../../public/heart.svg"
+import redHeart from "../../../../public/heartred.svg"
 
 type Props = {
   photos: PhotosWithTotalResults;
 };
-
 const ImagesContainer = ({ photos }: Props) => {
   const context = useContext(MediaContext);
   const [page, setPage] = useState<number>(1);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const client = getPexelsClient();
+  
+  
+   const toggleLike = (id: number) => {
+
+    context.setPhotos((prevPhotos) => {
+      const updatedPhotos = prevPhotos.photos.map((photo) => {
+        if (photo.id === id) {
+          return { ...photo, liked: !photo.liked };
+        }
+        return photo;
+      });
+      console.log(context.photos.photos[id])
+
+      return { ...prevPhotos, photos: updatedPhotos };
+
+    });
+  };
+
 
   const handleImageLoad = () => {
     console.log("Image loaded successfully");
@@ -43,7 +62,7 @@ const ImagesContainer = ({ photos }: Props) => {
           ...prevPhotos,
           photos: [...prevPhotos.photos, ...newPhotos],
         }));
-        setPage((prevPage) => prevPage + 1);
+        setPage((prevPage) => prevPage +1);
       } else {
         console.error("Error response:", response);
       }
@@ -63,10 +82,8 @@ const ImagesContainer = ({ photos }: Props) => {
         fetchPhotos();
       }
     };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
+     window.addEventListener("scroll", handleScroll);
+     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,6 +91,7 @@ const ImagesContainer = ({ photos }: Props) => {
 
   const memoizedPhotos = useMemo(() => {
     return photos.photos.map((photo, index) => (
+
       <div key={index} className={styles.photoWrapper}>
         <div className={styles.overlay}>
           <Image
@@ -81,6 +99,9 @@ const ImagesContainer = ({ photos }: Props) => {
             alt=""
             onClick={() => handleDownload(photo.src.original)}
           />
+        </div>
+        <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
+        <Image src={photo.liked ? redHeart : heart} alt="like" key={index} />
         </div>
         <Image
           src={photo.src.original}
