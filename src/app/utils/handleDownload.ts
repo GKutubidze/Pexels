@@ -1,5 +1,5 @@
 
-export const handleDownload = (url: string) => {
+export const handleDownload = (url: string,name:string) => {
     fetch(url)
         .then(response => response.blob())
         .then(blob => {
@@ -9,7 +9,7 @@ export const handleDownload = (url: string) => {
             // Create an anchor element
             const link = document.createElement("a");
             link.href = blobUrl;
-            link.download = "image.jpg"; // You can set the desired file name here
+            link.download = `${name}.jpg`; // You can set the desired file name here
             link.click();
 
             // Clean up

@@ -12,8 +12,8 @@
   height: auto;
 }
 .downloadIcon {
-  width: 15px;
-  height: 15px;
+  width: 25px;
+  height: 25px;
   stroke: white;
   stroke-width: 2;
   fill: none;
@@ -22,7 +22,7 @@
 
 .overlay {
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   right: 5px;
   padding: 5px;
   background-color: rgba(0, 0, 0, 0.64);

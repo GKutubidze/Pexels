@@ -97,7 +97,7 @@ const ImagesContainer = ({ photos }: Props) => {
           <Image
             src={download}
             alt=""
-            onClick={() => handleDownload(photo.src.original)}
+            onClick={() => handleDownload(photo.src.original,photo.photographer)}
           />
         </div>
         <div className={styles.heart} onClick={() => toggleLike(photo.id)}>

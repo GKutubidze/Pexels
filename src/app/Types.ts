@@ -33,6 +33,7 @@
 export type MediaType = "Home" | "Videos" | 'Liked' | "";
 
 export type SearchType ="Photos" | "Videos";
+
 export interface VideoFile {
   id: number;
   quality: string;
