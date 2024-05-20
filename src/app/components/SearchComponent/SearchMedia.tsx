@@ -93,7 +93,7 @@ export const SearchMedia = () => {
           <Image
             src={download}
             alt="Download"
-            onClick={() => handleDownload(photo.src.original)}
+            onClick={() => handleDownload(photo.src.original,photo.photographer)}
           />
         </div>
         <Image
