@@ -49,9 +49,9 @@ const SearchComponent = ({ query, setQuery }: Props) => {
           }}
         >
           {context.searchType === "Photos" ? (
-            <Image src="/picture-icon.svg" alt="video" width={20} height={20} />
+            <Image src="/images/picture-icon.svg" alt="video" width={20} height={20} />
           ) : (
-            <Image src="/video-icon.svg" alt="video" width={20} height={20} />
+            <Image src="/images/video-icon.svg" alt="video" width={20} height={20} />
           )}
 
           {width > 375 && (
@@ -71,13 +71,13 @@ const SearchComponent = ({ query, setQuery }: Props) => {
 
           {isArrowDown ? (
             <Image
-              src="/icon-down.svg"
+              src="/images/icon-down.svg"
               alt="Arrow Icon"
               width={10}
               height={10}
             />
           ) : (
-            <Image src="/icon-up.svg" alt="Arrow Icon" width={10} height={10} />
+            <Image src="/images/icon-up.svg" alt="Arrow Icon" width={10} height={10} />
           )}
         </div>
         <input
@@ -99,7 +99,7 @@ const SearchComponent = ({ query, setQuery }: Props) => {
 
         <div className={styles.searchIconWrapper}>
           <Image
-            src="/icon-search.svg"
+            src="/images/icon-search.svg"
             alt="Search Icon"
             width={25}
             height={25}

@@ -101,7 +101,7 @@ const ImagesContainer = () => {
           />
         </div>
         <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
-          <Image src={photo.liked ? "heartred.svg" : "heart.svg"} alt="like" key={index} width={25} height={25}/>
+          <Image src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"} alt="like" key={index} width={25} height={25}/>
         </div>
         <LazyImage
           src={photo.src.original}

@@ -39,7 +39,7 @@ const ConditionalBoard = ({ setShowConditionalBoard }: Props) => {
       ref={exploreRef}
     >
       <div className={styles.pictureContainer}>
-        <Image src="/picture-icon.svg" alt="picture" width={20} height={20} />
+        <Image src="/images/picture-icon.svg" alt="picture" width={20} height={20} />
         <p
           onClick={() => {
             context.setSearchType("Photos");
@@ -56,7 +56,7 @@ const ConditionalBoard = ({ setShowConditionalBoard }: Props) => {
       </div>
 
       <div className={styles.videoContainer}>
-        <Image src="/video-icon.svg" alt="vidoe" width={20} height={20} />
+        <Image src="/images/video-icon.svg" alt="vidoe" width={20} height={20} />
         <p
           onClick={() => {
             context.setSearchType("Videos");
