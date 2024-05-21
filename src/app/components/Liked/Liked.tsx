@@ -39,10 +39,12 @@ export const Liked = () => {
                 src={"images/download.svg"}
                 alt=""
                 onClick={() => handleDownload(photo.src.original,photo.photographer)}
+                width={25}
+                height={25}
               />
             </div>
             <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
-            <Image src={photo.liked ? "images/redHeart.svg" : "images/heart.svg"} alt="like" key={index} width={25} height={25} />
+            <Image src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"} alt="like" key={index} width={25} height={25} />
             </div>
             <Image
               src={photo.src.original}
