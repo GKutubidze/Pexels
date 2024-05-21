@@ -41,6 +41,33 @@ const ImagesContainer = () => {
 
 
   useEffect(() => {
+    const fetchPhotos = async () => {
+      if (loadingMore) return;
+      setLoadingMore(true);
+      try {
+        const response = await client.photos.curated({ page, per_page: 15 });
+        if ("photos" in response) {
+          const newPhotos = response.photos.filter(
+            (newPhoto) =>
+              !photos.photos.some(
+                (existingPhoto) => existingPhoto.id === newPhoto.id
+              )
+          );
+          setPhotos((prevPhotos) => {
+            const allPhotos = [...prevPhotos.photos, ...newPhotos];
+            return { ...prevPhotos, photos: getUniquePhotos(allPhotos) };
+          });
+          setPage((prevPage) => prevPage + 1);
+        } else {
+          console.error("Error response:", response);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoadingMore(false);
+      }
+    };
+  
     
     const handleScroll = () => {
       if (
@@ -60,32 +87,6 @@ const ImagesContainer = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingMore]); // Re-run effect when loadingMore changes
   
-  const fetchPhotos = async () => {
-    if (loadingMore) return;
-    setLoadingMore(true);
-    try {
-      const response = await client.photos.curated({ page, per_page: 15 });
-      if ("photos" in response) {
-        const newPhotos = response.photos.filter(
-          (newPhoto) =>
-            !photos.photos.some(
-              (existingPhoto) => existingPhoto.id === newPhoto.id
-            )
-        );
-        setPhotos((prevPhotos) => {
-          const allPhotos = [...prevPhotos.photos, ...newPhotos];
-          return { ...prevPhotos, photos: getUniquePhotos(allPhotos) };
-        });
-        setPage((prevPage) => prevPage + 1);
-      } else {
-        console.error("Error response:", response);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    } finally {
-      setLoadingMore(false);
-    }
-  };
 
  
   
