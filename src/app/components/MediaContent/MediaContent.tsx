@@ -15,14 +15,14 @@ const MediaContent = () => {
       mediaContent = (
         <>
           <MediaHeader title="Free Stock Photos" />
-          <ImagesContainer photos={context.photos} />
+          <ImagesContainer  />
         </>
       );
     } else if (context.mediaType === "Videos" && context.query !== " ") {
       mediaContent = <VideosContainer />;
     } else if (context.mediaType === "Liked" && context.query !== " ") {
       mediaContent = <Liked />;
-    } else if (context.mediaType === "" && context.searchType === "Photos") {
+    } else if (context.mediaType === "" && context.searchType === "Photos" ) {
       mediaContent = <SearchMedia />;
     } else if (context.mediaType === "" && context.searchType === "Videos") {
       mediaContent = <SearchVideo />;
