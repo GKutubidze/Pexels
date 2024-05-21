@@ -42,10 +42,7 @@ const ImagesContainer = ({ photos }: Props) => {
   };
 
   useEffect(() => {
-    fetchPhotos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+    
   const fetchPhotos = async () => {
     if (loadingMore) return;
     setLoadingMore(true);
@@ -72,22 +69,24 @@ const ImagesContainer = ({ photos }: Props) => {
       setLoadingMore(false);
     }
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        !loadingMore &&
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500
-      ) {
-        fetchPhotos();
-      }
-    };
-     window.addEventListener("scroll", handleScroll);
-     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+  fetchPhotos()
+  const handleScroll = () => {
+    if (
+      !loadingMore &&
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 500
+    ) {
+      fetchPhotos();
+    }
+  };
+   window.addEventListener("scroll", handleScroll);
+   return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingMore, page]);
+  }, []);
+
+
+  
 
   const memoizedPhotos = useMemo(() => {
     return photos.photos.map((photo, index) => (
