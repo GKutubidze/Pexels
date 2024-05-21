@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./Navbar.module.css";
 import Image from "next/image";
-import logo from "../../../../public/logo.png";
-import menu from "../../../../public/menu.svg";
+import logo from "../../../../public/images/logo.png";
+import menu from "../../../../public/images/menu.svg";
 const Navbar = () => {
   return (
     <div className={styles.navbar}>

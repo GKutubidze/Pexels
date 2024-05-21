@@ -3,7 +3,7 @@ import { useMediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./VideosContainer.module.css";
-import download from "../../../../public/download.svg";
+import download from "../../../../public/images/download.svg";
 import Image from "next/image";
 import MediaHeader from "./MediaHeader";
 import { Video } from "@/app/Types";

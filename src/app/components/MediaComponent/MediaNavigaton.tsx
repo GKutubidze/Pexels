@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import styles from './MediaNavigaton.module.css';
+ import styles from './MediaNavigaton.module.css';
 import {  useMediaContext } from '@/app/Context/MediaContext';
 import { MediaType } from '@/app/Types';
 
@@ -13,6 +12,7 @@ const MediaNavigaton = () => {
 
   const handleClick = (itemName: MediaType) => {
     context.setMediaType(itemName);
+    context.setQuery("");
   };
 
   return (

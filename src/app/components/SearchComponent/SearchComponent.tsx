@@ -21,6 +21,18 @@ const SearchComponent = ({ query, setQuery }: Props) => {
     useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>(" ");
 
+  const handleClicked=()=>{
+    setQuery(searchText.trim());
+    if(context.searchType=="Photos"){
+      context.setMediaType("Home")
+    }
+    else if(context.searchType=="Videos"){
+      context.setMediaType("Videos")
+    }
+
+
+  }
+
   return (
     <div className={styles.searchComponent}>
       {(!isArrowDown || showConditionalBoard) && (
@@ -91,10 +103,7 @@ const SearchComponent = ({ query, setQuery }: Props) => {
             alt="Search Icon"
             width={25}
             height={25}
-            onClick={() => {
-              setQuery(searchText.trim());
-              context.setMediaType("");
-            }}
+            onClick={handleClicked}
           />
         </div>
       </div>

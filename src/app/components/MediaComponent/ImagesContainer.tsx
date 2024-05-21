@@ -2,7 +2,7 @@
 import React, { useContext, useEffect, useState, useMemo, lazy } from "react";
 import styles from "./ImagesContainer.module.css";
 import Image from "next/image";
-import download from "../../../../public/download.svg";
+import download from "../../../../public/images/download.svg";
 import { MediaContext } from "@/app/Context/MediaContext";
  import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import { handleDownload } from "@/app/utils/handleDownload";
@@ -101,7 +101,7 @@ const ImagesContainer = () => {
           />
         </div>
         <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
-          <Image src={photo.liked ? "redHeart.svg" : "heart.svg"} alt="like" key={index} width={25} height={25}/>
+          <Image src={photo.liked ? "heartred.svg" : "heart.svg"} alt="like" key={index} width={25} height={25}/>
         </div>
         <LazyImage
           src={photo.src.original}

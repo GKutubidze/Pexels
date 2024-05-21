@@ -3,11 +3,10 @@ import React, { useMemo } from 'react'
 import Image from 'next/image';
 import { handleDownload } from '@/app/utils/handleDownload';
 import styles from "./Liked.module.css"
-import download from "../../../../public/download.svg";
-import heart from "../../../../public/heart.svg"
-import redHeart from "../../../../public/heartred.svg"
+  
 
 export const Liked = () => {
+
 
     const toggleLike = (id: number) => {
 
@@ -30,7 +29,6 @@ export const Liked = () => {
     
     const context=useMediaContext();
     const filtered = context.photos.photos.filter(item => item.liked);
-    console.log(filtered);
 
      const memoizedPhotos = useMemo(() => {
         return filtered.map((photo, index) => (
@@ -38,13 +36,13 @@ export const Liked = () => {
           <div key={index} className={styles.photoWrapper}>
             <div className={styles.overlay}>
               <Image
-                src={download}
+                src={"images/download.svg"}
                 alt=""
                 onClick={() => handleDownload(photo.src.original,photo.photographer)}
               />
             </div>
             <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
-            <Image src={photo.liked ? redHeart : heart} alt="like" key={index} />
+            <Image src={photo.liked ? "images/redHeart.svg" : "images/heart.svg"} alt="like" key={index} width={25} height={25} />
             </div>
             <Image
               src={photo.src.original}

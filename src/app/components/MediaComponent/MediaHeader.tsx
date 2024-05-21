@@ -1,9 +1,9 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './MediaHeader.module.css';
-import icon from '../../../../public/icon-down.svg';
-import up from '../../../../public/icon-up.svg';
-import correct from '../../../../public/correct.svg';
+import icon from '../../../../public/images/icon-down.svg';
+import up from '../../../../public/images/icon-up.svg';
+import correct from '../../../../public/images/correct.svg';
 import Image from 'next/image';
 
 const MediaHeader = ({title}:{title:string}) => {

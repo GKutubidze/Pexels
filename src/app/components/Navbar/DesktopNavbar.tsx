@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import styles from "./DesktopNavbar.module.css";
 import Image from "next/image";
-import logo from "../../../../public/temp.png";
-import icon from "../../../../public/arrow-down.svg";
-import dots from "../../../../public/dots.svg";
+import logo from "../../../../public/images/temp.png";
+import icon from "../../../../public/images/arrow-down.svg";
+import dots from "../../../../public/images/dots.svg";
 import ExploreDropDown from "./Dropdowns/ExploreDropDown";
 import { ConditionalDots } from "./Dropdowns/ConditionalDots";
 export const DesktopNavbar = () => {

@@ -3,7 +3,7 @@ import { useMediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import download from "../../../../public/download.svg";
+import download from "../../../../public/images/download.svg";
 import styles from "./SearchVideo.module.css";
 
 const SearchVideo = () => {
