@@ -1,11 +1,12 @@
 "use client";
 import { useMediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { lazy, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import styles from "./SearchMedia.module.css";
 import download from "../../../../public/download.svg";
 import { handleDownload } from "@/app/utils/handleDownload";
+const LazyImage = lazy(() => import("next/image"));
 
 export const SearchMedia = () => {
   const context = useMediaContext();
@@ -96,7 +97,7 @@ export const SearchMedia = () => {
             onClick={() => handleDownload(photo.src.original,photo.photographer)}
           />
         </div>
-        <Image
+        <LazyImage
           src={photo.src.original}
           alt={photo.alt || ""}
           width={500}

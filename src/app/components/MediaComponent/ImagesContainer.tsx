@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import React, { useContext, useEffect, useState, useMemo, lazy } from "react";
 import styles from "./ImagesContainer.module.css";
 import Image from "next/image";
 import download from "../../../../public/download.svg";
@@ -8,7 +8,8 @@ import { MediaContext } from "@/app/Context/MediaContext";
 import { handleDownload } from "@/app/utils/handleDownload";
  
 
- 
+const LazyImage = lazy(() => import("next/image"));
+
 const ImagesContainer = () => {
   const {photos,setPhotos} = useContext(MediaContext);
   const [page, setPage] = useState<number>(1);
@@ -102,7 +103,7 @@ const ImagesContainer = () => {
         <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
           <Image src={photo.liked ? "redHeart.svg" : "heart.svg"} alt="like" key={index} width={25} height={25}/>
         </div>
-        <Image
+        <LazyImage
           src={photo.src.original}
           alt={photo.alt || ""}
           width={500}
