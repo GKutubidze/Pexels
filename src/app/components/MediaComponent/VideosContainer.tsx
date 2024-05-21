@@ -13,12 +13,15 @@ import VideoPopup from "../VideoPopup/VideoPopup";
 const VideosContainer = () => {
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-   const context = useMediaContext();
+  const [isVideoCklicked, setIsVideoCklicked] = useState<boolean>(false);
+  const context = useMediaContext();
   const client = getPexelsClient();
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+
  
   const loadVideos = async () => {
     setLoading(true);
-     try {
+    try {
       const response = await client.videos.popular({ per_page: 10, page });
       if ("videos" in response) {
         context.setVideos((prevVideos) => ({
@@ -44,8 +47,8 @@ const VideosContainer = () => {
     const handleScroll = () => {
       if (
         !loading &&
-         window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 100 // Add some buffer
+        window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 100 // Add some buffer
       ) {
         loadVideos();
       }
@@ -55,24 +58,30 @@ const VideosContainer = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
-  
-
   const memoizedVideos = useMemo(() => {
-    return context.videos.videos.map((video: Video) => {
+    return context.videos.videos.map((video: Video,key) => {
       const bestVideoFile = getHighestResolutionVideo(video.video_files);
+
       return (
-        <div key={video.id} className={styles.videoWrapper}>
+        <div
+          key={video.id+key}
+          className={styles.videoWrapper}
+          onClick={() => {
+            setSelectedVideo(video);
+            setIsVideoCklicked(true);
+          }}
+        >
+          
           <div className={styles.overlay}>
             <Image
               src={download}
               alt="Download"
               onClick={() => {
                 window.open(video.video_files[0].link, "_blank");
-                console.log("fdfd");
-              }}
+               }}
               className={styles.downloadIcon}
             />
           </div>
@@ -91,16 +100,20 @@ const VideosContainer = () => {
         </div>
       );
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context.videos.videos]);
   return (
     <div>
-    <MediaHeader title="Trending Free Stock Videos" />
-    <div className={styles.videosContainer}>
-      {memoizedVideos}
-      {loading && <div className={styles.loadingIndicator}>Loading...</div>}
+      <MediaHeader title="Trending Free Stock Videos" />
+      <div className={styles.videosContainer}>
+        {memoizedVideos}
+        {loading && <div className={styles.loadingIndicator}>Loading...</div>}
+      </div>
+      {isVideoCklicked && selectedVideo && (
+        <VideoPopup video={selectedVideo} setIsVideoCklicked={setIsVideoCklicked} />
+      )}
     </div>
-  </div>
-);
+  );
 };
 
 export default VideosContainer;

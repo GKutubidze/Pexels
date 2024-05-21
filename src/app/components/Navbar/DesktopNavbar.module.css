@@ -10,11 +10,22 @@
 }
 
 .menuContainer p {
-  font-size: 16px;
   font-weight: bold;
-  color: var(--white);
 }
-
+.title {
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.dots{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+}
+.title:hover {
+  color: rgb(223, 223, 223);
+}
 .join {
   all: unset;
   cursor: pointer;
@@ -28,10 +39,11 @@
 }
 .explore {
   display: flex;
-  align-items:center;
+  position: relative;
+  align-items: center;
   gap: 10px;
-  
+  cursor: pointer;
 }
- .explore p {
-    margin: 0 auto;
- }
+.explore p {
+  margin: 0 auto;
+}

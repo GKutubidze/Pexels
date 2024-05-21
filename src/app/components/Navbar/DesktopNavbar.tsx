@@ -1,27 +1,50 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import styles from "./DesktopNavbar.module.css";
 import Image from "next/image";
 import logo from "../../../../public/temp.png";
 import icon from "../../../../public/arrow-down.svg";
 import dots from "../../../../public/dots.svg";
+import ExploreDropDown from "./Dropdowns/ExploreDropDown";
+import { ConditionalDots } from "./Dropdowns/ConditionalDots";
 export const DesktopNavbar = () => {
+  const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
+  const [isDotsCklicked, setIsDotsCklicked] = useState<boolean>(false);
+
   return (
     <div className={styles.main}>
       <Image src={logo} alt="logo" />
 
       <div className={styles.menuContainer}>
-        <div className={styles.explore}>
-          <p>Explore</p>
+        <div
+          className={styles.explore}
+          onMouseEnter={() => setIsDropdownVisible(true)}
+          // onMouseLeave={() => setIsDropdownVisible(false)}
+        >
+          <p className={styles.title}>Explore</p>
 
           <Image src={icon} alt="" />
+          {isDropdownVisible && (
+            <ExploreDropDown setIsDropdownVisible={setIsDropdownVisible} />
+          )}
         </div>
         <div className={styles.license}>
-          <p>License</p>
+          <p className={styles.title}>License</p>
         </div>
         <div className={styles.upload}>
-          <p>Upload</p>
+          <p className={styles.title}>Upload</p>
         </div>
-        <Image src={dots} alt="" />
+
+        <div
+          className={styles.dots}
+          onMouseEnter={() => setIsDotsCklicked(true)}
+        >
+          <Image src={dots} alt="" />
+
+          {isDotsCklicked && (
+            <ConditionalDots setIsDotsCklicked={setIsDotsCklicked} />
+          )}
+        </div>
 
         <button className={styles.join}>Join</button>
       </div>
