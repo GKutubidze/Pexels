@@ -9,8 +9,6 @@
   .photosContainer {
     grid-template-columns: repeat(3, 1fr);
     /* column-count: 3; */
-
-   
   }
 }
 
@@ -18,14 +16,12 @@
   width: 100%;
   position: relative;
   break-inside: avoid;
-
-  
+  overflow-y: hidden;
 }
 
 .photo {
   width: 100%;
   height: auto;
-  
 }
 
 .overlay {
@@ -36,7 +32,7 @@
   background-color: rgba(0, 0, 0, 0.64);
   border-radius: 50%;
   cursor: pointer;
- }
+}
 
 .heart {
   position: absolute;

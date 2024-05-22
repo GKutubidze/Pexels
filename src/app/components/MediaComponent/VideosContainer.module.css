@@ -1,6 +1,6 @@
 .videosContainer {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* display: grid;
+  grid-template-columns: repeat(2, 1fr); */
 
   column-count: 2;
   gap: 30px;
@@ -10,6 +10,7 @@
   width: 100%;
   position: relative;
   z-index: 1000;
+  margin: 15px 0;
 }
 
 .videoWrapper:hover {

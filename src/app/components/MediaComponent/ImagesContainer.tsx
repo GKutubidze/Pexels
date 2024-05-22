@@ -8,6 +8,8 @@ import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import { handleDownload } from "@/app/utils/handleDownload";
 import { toggleLike } from "@/app/utils/ toggleLike";
 import { getUniquePhotos } from "@/app/utils/getUniquePhotos";
+import LazyLoad from 'react-lazyload';
+
  
 const LazyImage = lazy(() => import("next/image"));
 
@@ -22,50 +24,55 @@ const ImagesContainer = () => {
   };
 
  
-  useEffect(() => {
-    const fetchPhotos = async () => {
-      if (loadingMore) return;
-      setLoadingMore(true);
-      try {
-        const response = await client.photos.curated({ page, per_page: 15 });
-        if ("photos" in response) {
-          const newPhotos = response.photos.filter(
-            (newPhoto) =>
-              !photos.photos.some(
-                (existingPhoto) => existingPhoto.id === newPhoto.id
-              )
-          );
-          setPhotos((prevPhotos) => {
-            const allPhotos = [...prevPhotos.photos, ...newPhotos];
-            return { ...prevPhotos, photos: getUniquePhotos(allPhotos) };
-          });
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          console.error("Error response:", response);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoadingMore(false);
+  const fetchPhotos = async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const response = await client.photos.curated({ page, per_page: 15 });
+      if ("photos" in response) {
+        const newPhotos = response.photos.filter(
+          (newPhoto) =>
+            !photos.photos.some(
+              (existingPhoto) => existingPhoto.id === newPhoto.id
+            )
+        );
+        setPhotos((prevPhotos) => {
+          const allPhotos = [...prevPhotos.photos, ...newPhotos];
+          return { ...prevPhotos, photos: getUniquePhotos(allPhotos) };
+        });
+        setPage((prevPage) => prevPage + 1);
+      } else {
+        console.error("Error response:", response);
       }
-    };
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
+  useEffect(() => {
+    fetchPhotos(); // Initial fetch on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       if (
         !loadingMore &&
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 500
       ) {
-        fetchPhotos(); 
+        fetchPhotos();
       }
     };
 
     window.addEventListener("scroll", handleScroll);
 
-     return () => {
+    return () => {
       window.removeEventListener("scroll", handleScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+  }, [loadingMore]); 
 
  
   const memoizedPhotos = useMemo(() => {
@@ -92,7 +99,8 @@ const ImagesContainer = () => {
             height={25}
           />
         </div>
-        <LazyImage
+        <LazyLoad>
+        <Image
           src={photo.src.original}
           alt={photo.alt || ""}
           width={500}
@@ -101,6 +109,8 @@ const ImagesContainer = () => {
           onLoad={handleImageLoad}
           loading="lazy"
         />
+        </LazyLoad>
+       
       </div>
     ));
     // eslint-disable-next-line react-hooks/exhaustive-deps

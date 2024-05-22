@@ -59,3 +59,16 @@
   border-radius: 5px;
   z-index: 1000; /* Ensure loading indicator is on top of other content */
 }
+
+.heart {
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  padding: 5px;
+  border-radius: 18%;
+  cursor: pointer;
+  background-color: rgb(255, 250, 250);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}

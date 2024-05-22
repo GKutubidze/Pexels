@@ -9,6 +9,7 @@ import MediaHeader from "./MediaHeader";
 import { Video } from "@/app/Types";
 import { getHighestResolutionVideo } from "@/app/utils/getHighestResolutionVideo";
 import VideoPopup from "../VideoPopup/VideoPopup";
+import LazyVideo from "../LazyVideo/LazyVideo";
 
 const VideosContainer = () => {
   const [page, setPage] = useState<number>(1);
@@ -85,7 +86,7 @@ const VideosContainer = () => {
               className={styles.downloadIcon}
             />
           </div>
-          <video
+          <LazyVideo
             src={bestVideoFile.link}
             width="100%"
             height={video.height}

@@ -9,7 +9,7 @@ import { handleDownload } from "@/app/utils/handleDownload";
 const LazyImage = lazy(() => import("next/image"));
 
 export const SearchMedia = () => {
-  const context = useMediaContext();
+  const {setPhotos,searchedPhotos,setSearchedPhotos,query} = useMediaContext();
   const [page, setPage] = useState<number>(1);
   const [loadingMorePicture, setLoadingMorePicture] = useState<boolean>(false);
   const client = getPexelsClient();
@@ -20,6 +20,18 @@ export const SearchMedia = () => {
 
   const handleImageError = () => {
     console.error("Error loading image");
+  };
+
+  const toggleLike = (id: number) => {
+    setSearchedPhotos((prevPhotos) => {
+      const updatedPhotos = prevPhotos.photos.map((photo) => {
+        if (photo.id === id) {
+          return { ...photo, liked: !photo.liked };
+        }
+        return photo;
+      });
+      return { ...prevPhotos, photos: updatedPhotos };
+    });
   };
 
   const searchPhotos = async (newQuery: string, newPage: number) => {
@@ -33,7 +45,7 @@ export const SearchMedia = () => {
 
       if ("photos" in response) {
         if (newPage === 1) {
-          context.setSearchedPhotos({
+          setSearchedPhotos({
             photos: response.photos,
             page: response.page,
             per_page: response.per_page,
@@ -41,7 +53,7 @@ export const SearchMedia = () => {
             next_page: response.next_page,
           });
         } else {
-          context.setSearchedPhotos((prevPhotos) => ({
+          setSearchedPhotos((prevPhotos) => ({
             ...prevPhotos,
             photos: [...prevPhotos.photos, ...response.photos],
             page: response.page,
@@ -59,17 +71,25 @@ export const SearchMedia = () => {
   };
 
   useEffect(() => {
-    if (context.query.trim() !== "") {
+    if (query.trim() !== "") {
       setPage(1); // Reset page to 1 when query changes
-    }
-  }, [context.query]);
-
-  useEffect(() => {
-    if (context.query.trim() !== "") {
-      searchPhotos(context.query, page);
+      setSearchedPhotos({
+        photos: [], // Clear searched photos when query changes
+        page: 0,
+        per_page: 0,
+        total_results: 0,
+        next_page: 0
+      });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.query, page]);
+  }, [query ]);
+
+  useEffect(() => {
+    if ( query.trim() !== "") {
+      searchPhotos( query, page);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ query, page]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,13 +108,25 @@ export const SearchMedia = () => {
   }, []);
 
   const memoizedPhotos = useMemo(() => {
-    return context.searchedPhotos.photos.map((photo, index) => (
+    return searchedPhotos.photos.map((photo, index) => (
       <div key={index} className={styles.photoWrapper}>
         <div className={styles.overlay}>
           <Image
             src={download}
             alt="Download"
             onClick={() => handleDownload(photo.src.original,photo.photographer)}
+          />
+        </div>
+        <div
+          className={styles.heart}
+          onClick={() => toggleLike(photo.id)}
+        >
+          <Image
+            src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"}
+            alt="like"
+            key={index}
+            width={25}
+            height={25}
           />
         </div>
         <LazyImage
@@ -109,7 +141,8 @@ export const SearchMedia = () => {
         />
       </div>
     ));
-  }, [context.searchedPhotos.photos]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchedPhotos.photos]);
 
   return (
     <div className={styles.photosContainer}>
