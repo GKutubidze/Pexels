@@ -4,42 +4,24 @@ import styles from "./ImagesContainer.module.css";
 import Image from "next/image";
 import download from "../../../../public/images/download.svg";
 import { MediaContext } from "@/app/Context/MediaContext";
- import { getPexelsClient } from "@/app/utils/getPexelsClient";
+import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import { handleDownload } from "@/app/utils/handleDownload";
+import { toggleLike } from "@/app/utils/ toggleLike";
+import { getUniquePhotos } from "@/app/utils/getUniquePhotos";
  
-
 const LazyImage = lazy(() => import("next/image"));
 
 const ImagesContainer = () => {
-  const {photos,setPhotos} = useContext(MediaContext);
+  const { photos, setPhotos } = useContext(MediaContext);
   const [page, setPage] = useState<number>(1);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const client = getPexelsClient();
-
-  const toggleLike = (id: number) => {
-     setPhotos((prevPhotos) => {
-      const updatedPhotos = prevPhotos.photos.map((photo) => {
-        if (photo.id === id) {
-          return { ...photo, liked: !photo.liked };
-        }
-        return photo;
-      });
-      return { ...prevPhotos, photos: updatedPhotos };
-    });
-  };
 
   const handleImageLoad = () => {
     console.log("Image loaded successfully");
   };
 
-  // Function to ensure unique photos based on their IDs
-  const getUniquePhotos = (photos: any[]) => {
-    const uniquePhotosMap = new Map();
-    photos.forEach((photo) => uniquePhotosMap.set(photo.id, photo));
-    return Array.from(uniquePhotosMap.values());
-  };
-
-
+ 
   useEffect(() => {
     const fetchPhotos = async () => {
       if (loadingMore) return;
@@ -67,42 +49,48 @@ const ImagesContainer = () => {
         setLoadingMore(false);
       }
     };
-  
-    
+
     const handleScroll = () => {
       if (
         !loadingMore &&
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 500
       ) {
-        fetchPhotos(); // Trigger API call when reaching near bottom
+        fetchPhotos(); 
       }
     };
-  
+
     window.addEventListener("scroll", handleScroll);
-  
-    // Clean up the event listener on component unmount
-    return () => {
+
+     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingMore]); // Re-run effect when loadingMore changes
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
 
  
-  
-
   const memoizedPhotos = useMemo(() => {
-    return  photos.photos.map((photo, index) => (
+    return photos.photos.map((photo, index) => (
       <div key={index} className={styles.photoWrapper}>
         <div className={styles.overlay}>
           <Image
             src={download}
             alt=""
-            onClick={() => handleDownload(photo.src.original, photo.photographer)}
+            onClick={() =>
+              handleDownload(photo.src.original, photo.photographer)
+            }
           />
         </div>
-        <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
-          <Image src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"} alt="like" key={index} width={25} height={25}/>
+        <div
+          className={styles.heart}
+          onClick={() => toggleLike(photo.id, setPhotos)}
+        >
+          <Image
+            src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"}
+            alt="like"
+            key={index}
+            width={25}
+            height={25}
+          />
         </div>
         <LazyImage
           src={photo.src.original}
@@ -116,7 +104,7 @@ const ImagesContainer = () => {
       </div>
     ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ photos.photos]);
+  }, [photos.photos]);
 
   return (
     <div className={styles.photosContainer}>
