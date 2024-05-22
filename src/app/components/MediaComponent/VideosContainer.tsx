@@ -6,26 +6,28 @@ import styles from "./VideosContainer.module.css";
 import download from "../../../../public/images/download.svg";
 import Image from "next/image";
 import MediaHeader from "./MediaHeader";
-import { Video } from "@/app/Types";
 import { getHighestResolutionVideo } from "@/app/utils/getHighestResolutionVideo";
 import VideoPopup from "../VideoPopup/VideoPopup";
 import LazyVideo from "../LazyVideo/LazyVideo";
+import { useWindowWidth } from "@/app/hooks/useWindowWidth";
+import { Video } from "@/app/Types";
 
 const VideosContainer = () => {
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [isVideoCklicked, setIsVideoCklicked] = useState<boolean>(false);
-  const context = useMediaContext();
+  const {setVideos,videos} = useMediaContext();
   const client = getPexelsClient();
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+  const width = useWindowWidth();
+  const numberOfColumns = width <= 768 ? 2 : 3;
 
- 
   const loadVideos = async () => {
     setLoading(true);
     try {
       const response = await client.videos.popular({ per_page: 10, page });
       if ("videos" in response) {
-        context.setVideos((prevVideos) => ({
+        setVideos((prevVideos) => ({
           ...prevVideos,
           page: response.page,
           per_page: response.per_page,
@@ -63,55 +65,74 @@ const VideosContainer = () => {
   }, [loading]);
 
   const memoizedVideos = useMemo(() => {
-    return context.videos.videos.map((video: Video,key) => {
-      const bestVideoFile = getHighestResolutionVideo(video.video_files);
-
-      return (
-        <div
-          key={video.id+key}
-          className={styles.videoWrapper}
-          onClick={() => {
-            setSelectedVideo(video);
-            setIsVideoCklicked(true);
-          }}
-        >
-          
-          <div className={styles.overlay}>
-            <Image
-              src={download}
-              alt="Download"
-              onClick={() => {
-                window.open(video.video_files[0].link, "_blank");
-               }}
-              className={styles.downloadIcon}
-            />
-          </div>
-          <LazyVideo
-            src={bestVideoFile.link}
-            width="100%"
-            height={video.height}
-            onMouseEnter={(e) => e.currentTarget.play()}
-            onMouseLeave={(e) => e.currentTarget.pause()}
-            preload="metadata"
-            muted
-            loop
-            className={styles.video}
-            // onLoadedData={handleVideoLoad}
-          />
-        </div>
-      );
+    const columns: Video[][] = Array.from(
+      { length: numberOfColumns },
+      () => []
+    );
+    videos.videos.forEach((video, index) => {
+      columns[index % numberOfColumns].push(video);
     });
+
+    return (
+      <div className={styles.container}>
+        {columns.map((column, columnIndex) => (
+          <div key={columnIndex} className={styles.videoColumn}>
+            {column.map((video, index) => {
+              const bestVideoFile = getHighestResolutionVideo(
+                video.video_files
+              );
+              return (
+                <div
+                  key={video.id}
+                  className={styles.videoWrapper}
+                  onClick={() => {
+                    setSelectedVideo(video);
+                    // setIsVideoClicked(true);
+                  }}
+                >
+                  <div className={styles.overlay}>
+                    <Image
+                      src={download}
+                      alt="Download"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(video.video_files[0].link, "_blank");
+                      }}
+                      className={styles.downloadIcon}
+                    />
+                  </div>
+                  <LazyVideo
+                    src={bestVideoFile.link}
+                    width="100%"
+                    height={video.height}
+                    onMouseEnter={(e) => e.currentTarget.play()}
+                    onMouseLeave={(e) => e.currentTarget.pause()}
+                    preload="metadata"
+                    muted
+                    loop
+                    className={styles.video}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context.videos.videos]);
+  }, [videos.videos]);
   return (
     <div>
       <MediaHeader title="Trending Free Stock Videos" />
-      <div className={styles.videosContainer}>
+      <div>
         {memoizedVideos}
         {loading && <div className={styles.loadingIndicator}>Loading...</div>}
       </div>
       {isVideoCklicked && selectedVideo && (
-        <VideoPopup video={selectedVideo} setIsVideoCklicked={setIsVideoCklicked} />
+        <VideoPopup
+          video={selectedVideo}
+          setIsVideoCklicked={setIsVideoCklicked}
+        />
       )}
     </div>
   );

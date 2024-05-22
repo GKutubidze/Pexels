@@ -1,27 +1,21 @@
-.photosContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  grid-gap: 20px;
-  /* columns: 2; */
-}
-
-@media (min-width: 1024px) {
-  .photosContainer {
-    grid-template-columns: repeat(3, 1fr);
-    /* column-count: 3; */
-  }
+.container {
+  display: flex;
 }
 
 .photoWrapper {
-  width: 100%;
-  position: relative;
-  break-inside: avoid;
-  overflow-y: hidden;
+  flex: 1;
+  margin: 0 10px;
 }
 
 .photo {
   width: 100%;
   height: auto;
+  margin-bottom: 20px;
+}
+
+.photoContainer{
+  position: relative;
+
 }
 
 .overlay {

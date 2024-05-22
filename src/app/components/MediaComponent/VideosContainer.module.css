@@ -1,27 +1,29 @@
-.videosContainer {
-  /* display: grid;
-  grid-template-columns: repeat(2, 1fr); */
+.container {
+  display: flex;
+  
+}
 
-  column-count: 2;
-  gap: 30px;
+.videoColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 20px;
 }
 
 .videoWrapper {
-  width: 100%;
   position: relative;
-  z-index: 1000;
-  margin: 15px 0;
-}
-
-.videoWrapper:hover {
   cursor: pointer;
-}
+  overflow: hidden;
+  margin: 0 10px;
 
-.video {
+ }
+
+ .video {
   width: 100%;
   height: auto;
-  display: block;
+  border-radius: 10px;
 }
+
 .downloadIcon {
   width: 25px;
   height: 25px;

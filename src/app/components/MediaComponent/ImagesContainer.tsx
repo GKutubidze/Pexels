@@ -2,15 +2,15 @@
 import React, { useContext, useEffect, useState, useMemo, lazy } from "react";
 import styles from "./ImagesContainer.module.css";
 import Image from "next/image";
-import download from "../../../../public/images/download.svg";
 import { MediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import { handleDownload } from "@/app/utils/handleDownload";
-import { toggleLike } from "@/app/utils/ toggleLike";
 import { getUniquePhotos } from "@/app/utils/getUniquePhotos";
-import LazyLoad from 'react-lazyload';
+import LazyLoad from "react-lazyload";
+import { Photo } from "pexels/dist/types";
+import { useWindowWidth } from "@/app/hooks/useWindowWidth";
+import { toggleLike } from "@/app/utils/ toggleLike";
 
- 
 const LazyImage = lazy(() => import("next/image"));
 
 const ImagesContainer = () => {
@@ -18,12 +18,13 @@ const ImagesContainer = () => {
   const [page, setPage] = useState<number>(1);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const client = getPexelsClient();
+  const width = useWindowWidth();
+  const numberOfColumns = width <= 768 ? 2 : 3;
 
   const handleImageLoad = () => {
     console.log("Image loaded successfully");
   };
 
- 
   const fetchPhotos = async () => {
     if (loadingMore) return;
     setLoadingMore(true);
@@ -72,52 +73,71 @@ const ImagesContainer = () => {
       window.removeEventListener("scroll", handleScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingMore]); 
+  }, [loadingMore]);
 
- 
   const memoizedPhotos = useMemo(() => {
-    return photos.photos.map((photo, index) => (
-      <div key={index} className={styles.photoWrapper}>
-        <div className={styles.overlay}>
-          <Image
-            src={download}
-            alt=""
-            onClick={() =>
-              handleDownload(photo.src.original, photo.photographer)
-            }
-          />
-        </div>
-        <div
-          className={styles.heart}
-          onClick={() => toggleLike(photo.id, setPhotos)}
-        >
-          <Image
-            src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"}
-            alt="like"
-            key={index}
-            width={25}
-            height={25}
-          />
-        </div>
-        <LazyLoad>
-        <Image
-          src={photo.src.original}
-          alt={photo.alt || ""}
-          width={500}
-          height={500}
-          className={styles.photo}
-          onLoad={handleImageLoad}
-          loading="lazy"
-        />
-        </LazyLoad>
-       
+    // Create arrays to hold the images for each column
+    const columns: Photo[][] = Array.from(
+      { length: numberOfColumns },
+      () => []
+    );
+    photos.photos.forEach((photo, index) => {
+      columns[index % numberOfColumns].push(photo);
+    });
+    return (
+      <div className={styles.container}>
+        {columns.map((column, columnIndex) => (
+          <div key={columnIndex} className={styles.photoWrapper}>
+            {column.map((photo, index) => (
+              <div key={index} className={styles.photoContainer}>
+                <div className={styles.overlay}>
+                  <Image
+                    src={"/images/download.svg"}
+                    alt=""
+                    onClick={() =>
+                      handleDownload(photo.src.original, photo.photographer)
+                    }
+                    width={25}
+                    height={25}
+                  />
+                </div>
+                <div
+                  className={styles.heart}
+                  onClick={() => toggleLike(photo.id, setPhotos)}
+                >
+                  <Image
+                    src={
+                      photo.liked ? "/images/heartred.svg" : "/images/heart.svg"
+                    }
+                    alt="like"
+                    key={index}
+                    width={25}
+                    height={25}
+                  />
+                </div>
+
+                <Image
+                  key={index}
+                  src={photo.src.original}
+                  alt={photo.alt || ""}
+                  width={500}
+                  height={500}
+                  className={styles.photo}
+                  onLoad={handleImageLoad}
+                  priority
+                />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
-    ));
+    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photos.photos]);
 
   return (
-    <div className={styles.photosContainer}>
+    <div>
       {memoizedPhotos}
       {loadingMore && <div className={styles.loadingIndicator}>Loading...</div>}
     </div>
