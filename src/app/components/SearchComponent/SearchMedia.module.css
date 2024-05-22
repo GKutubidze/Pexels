@@ -1,23 +1,23 @@
-.photosContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));  
-    grid-gap: 20px;  
-    /* columns: 2; */
+.container {
+  display: flex;
+}
 
-  
-  }
-  
-  .photoWrapper {
-    width: 100%;
-    position: relative;
-    break-inside: avoid;
-    
-  }
-  
-  .photo {
-    width: 100%;
-    height: auto;
-  }
+.photoWrapper {
+  flex: 1;
+  margin: 0 10px;
+  position: relative;
+}
+
+.photo {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.photoContainer{
+  position: relative;
+
+}
   
    .overlay {
     position: absolute;

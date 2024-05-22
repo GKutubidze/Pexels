@@ -9,9 +9,8 @@ import { Liked } from "../Liked/Liked";
 
 const MediaContent = () => {
   const context = useMediaContext();
-  let mediaContent = null;
-  console.log(context.query.length);
-
+  let mediaContent: JSX.Element | null = null;
+   
   if (context.mediaType === "Home" && context.query.length <= 0) {
     mediaContent = (
       <>
@@ -34,11 +33,4 @@ const MediaContent = () => {
 
 export default MediaContent;
 
-// } else if (context.mediaType === "Videos" && context.query !== " ") {
-//   mediaContent = <VideosContainer />;
-// } else if (context.mediaType === "Liked" && context.query !== " ") {
-//   mediaContent = <Liked />;
-// } else if (context.mediaType === "" && context.searchType === "Photos" ) {
-//   mediaContent = <SearchMedia />;
-// } else if (context.mediaType === "" && context.searchType === "Videos") {
-//   mediaContent = <SearchVideo />;
+ 

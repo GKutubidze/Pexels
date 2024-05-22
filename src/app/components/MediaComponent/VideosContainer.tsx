@@ -83,7 +83,7 @@ const VideosContainer = () => {
               );
               return (
                 <div
-                  key={video.id}
+                  key={index}
                   className={styles.videoWrapper}
                   onClick={() => {
                     setSelectedVideo(video);
