@@ -8,6 +8,7 @@ import download from "../../../../public/images/download.svg";
 import { handleDownload } from "@/app/utils/handleDownload";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { Photo } from "pexels/dist/types";
+import { toggleLike } from "@/app/utils/ toggleLike";
 const LazyImage = lazy(() => import("next/image"));
 
 export const SearchMedia = () => {
@@ -25,17 +26,7 @@ export const SearchMedia = () => {
     console.error("Error loading image");
   };
 
-  const toggleLike = (id: number) => {
-    setSearchedPhotos((prevPhotos) => {
-      const updatedPhotos = prevPhotos.photos.map((photo) => {
-        if (photo.id === id) {
-          return { ...photo, liked: !photo.liked };
-        }
-        return photo;
-      });
-      return { ...prevPhotos, photos: updatedPhotos };
-    });
-  };
+
 
   const searchPhotos = async (newQuery: string, newPage: number) => {
     setLoadingMorePicture(true);
@@ -133,7 +124,7 @@ export const SearchMedia = () => {
                     onClick={() => handleDownload(photo.src.original, photo.photographer)}
                   />
                 </div>
-                <div className={styles.heart} onClick={() => toggleLike(photo.id)}>
+                <div className={styles.heart} onClick={() => toggleLike(photo.id,setSearchedPhotos)}>
                   <Image
                     src={photo.liked ? "/images/heartred.svg" : "/images/heart.svg"}
                     alt="like"
@@ -142,7 +133,7 @@ export const SearchMedia = () => {
                     height={25}
                   />
                 </div>
-                <LazyImage
+                <Image
                   src={photo.src.original}
                   alt={photo.alt || ""}
                   width={500}
@@ -150,7 +141,7 @@ export const SearchMedia = () => {
                   className={styles.photo}
                   onLoad={handleImageLoad}
                   onError={handleImageError}
-                  loading="lazy"
+                  priority
                 />
               </div>
             ))}

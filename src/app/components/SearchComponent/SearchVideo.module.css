@@ -1,15 +1,27 @@
-.videosContainer {
-  columns: 2;
+.container {
+  display: flex;
+  
+}
+
+.videoColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 20px;
 }
 
 .videoWrapper {
-  width: 100%;
   position: relative;
-}
+  cursor: pointer;
+  overflow: hidden;
+  margin: 0 10px;
 
-.video {
+ }
+
+ .video {
   width: 100%;
   height: auto;
+  border-radius: 10px;
 }
 .downloadIcon {
   width: 25px;
