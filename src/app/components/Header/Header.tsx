@@ -1,19 +1,13 @@
 "use client";
-import React, {
-  useEffect,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Header.module.css";
 import Navbar from "../Navbar/Navbar";
 import SearchComponent from "../SearchComponent/SearchComponent";
-import { DesktopNavbar } from "../Navbar/DesktopNavbar";
-import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { useMediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 
 const Header = () => {
   const context = useMediaContext();
-  const width = useWindowWidth();
   const client = getPexelsClient();
   const [loading, setLoading] = useState(true);
 
@@ -51,7 +45,7 @@ const Header = () => {
   return (
     <>
       <div className={styles.header} style={headerStyle}>
-        {width < 768 ? <Navbar /> : <DesktopNavbar />}
+        <Navbar />
 
         <div className={styles.info}>
           <p>

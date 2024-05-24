@@ -3,7 +3,7 @@
   justify-content: space-between;
 }
 
-.menuContainer {
+.menuContainerMobile {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -22,4 +22,52 @@
 }
 .menu{
     cursor: pointer;
+}
+
+.menuContainerDesktop {
+  display: none;
+  align-items: center;
+  gap: 15px;
+}
+
+.menuContainerDesktop  p {
+  font-weight: bold;
+}
+
+.title {
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.dots{
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+}
+.title:hover {
+  color: rgb(223, 223, 223);
+}
+
+.explore {
+  display: flex;
+  position: relative;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+.explore p {
+  margin: 0 auto;
+}
+
+
+@media screen and (min-width: 1024px) {
+  .menuContainerDesktop {
+    display: flex;
+    
+  }
+
+  .menuContainerMobile{
+    display: none;
+  }
 }

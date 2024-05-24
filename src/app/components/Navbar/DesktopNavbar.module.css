@@ -1,31 +1,6 @@
-.main {
-  display: flex;
-  justify-content: space-between;
-}
+ 
 
-.menuContainer {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
 
-.menuContainer p {
-  font-weight: bold;
-}
-.title {
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-.dots{
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  cursor: pointer;
-}
-.title:hover {
-  color: rgb(223, 223, 223);
-}
 .join {
   all: unset;
   cursor: pointer;
@@ -36,14 +11,4 @@
   border-radius: 5px;
   background-color: white;
   text-align: center;
-}
-.explore {
-  display: flex;
-  position: relative;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-}
-.explore p {
-  margin: 0 auto;
 }
