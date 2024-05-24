@@ -25,8 +25,7 @@ const Navbar = (props: Props) => {
   } = props;
 
   const user = useAuth();
- console.log(user?.user_metadata)
-
+ 
  
 
 

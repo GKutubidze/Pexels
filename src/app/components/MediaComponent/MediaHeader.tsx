@@ -5,10 +5,11 @@ import icon from '../../../../public/images/icon-down.svg';
 import up from '../../../../public/images/icon-up.svg';
 import correct from '../../../../public/images/correct.svg';
 import Image from 'next/image';
-
+ 
 const MediaHeader = ({title}:{title:string}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>('Trending');
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleOptionClick = (option: string) => {
