@@ -10,6 +10,9 @@ const Header = () => {
   const context = useMediaContext();
   const client = getPexelsClient();
   const [loading, setLoading] = useState(true);
+  const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
+  const [isDotsCklicked, setIsDotsCklicked] = useState<boolean>(false);
+
 
   useEffect(() => {
     const fetchRandomPhoto = async () => {
@@ -45,7 +48,7 @@ const Header = () => {
   return (
     <>
       <div className={styles.header} style={headerStyle}>
-        <Navbar />
+        <Navbar isDropdownVisible={isDropdownVisible} setIsDropdownVisible={setIsDropdownVisible} isDotsCklicked={isDotsCklicked} setIsDotsCklicked={setIsDotsCklicked} />
 
         <div className={styles.info}>
           <p>

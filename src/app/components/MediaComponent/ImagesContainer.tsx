@@ -6,12 +6,10 @@ import { MediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import { handleDownload } from "@/app/utils/handleDownload";
 import { getUniquePhotos } from "@/app/utils/getUniquePhotos";
-import LazyLoad from "react-lazyload";
 import { Photo } from "pexels/dist/types";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { toggleLike } from "@/app/utils/ toggleLike";
 
-const LazyImage = lazy(() => import("next/image"));
 
 const ImagesContainer = () => {
   const { photos, setPhotos } = useContext(MediaContext);
