@@ -9,7 +9,10 @@ import { getUniquePhotos } from "@/app/utils/getUniquePhotos";
 import { Photo } from "pexels/dist/types";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { toggleLike } from "@/app/utils/ toggleLike";
-
+import useAuth from "@/app/hooks/useAuth";
+import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
+import useLikedPhotos from "@/app/hooks/useLikedPhotos";
+ 
 
 const ImagesContainer = () => {
   const { photos, setPhotos } = useContext(MediaContext);
@@ -17,11 +20,89 @@ const ImagesContainer = () => {
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const client = getPexelsClient();
   const width = useWindowWidth();
+  const { likedPhotos,isPhotoLiked} = useLikedPhotos();
+
   const numberOfColumns = width <= 768 ? 2 : 3;
 
   const handleImageLoad = () => {
     console.log("Image loaded successfully");
   };
+  const user = useAuth();
+  const supabase=supabaseBrowser()
+
+  const handleLike = async (photo_id: number) => {
+    const photo = photos.photos.find((item) => item.id === photo_id);
+
+    if (!user) {
+      alert('You need to log in to like a photo');
+      return;
+    }
+
+    if (photo) {
+      try {
+        // Check if the photo is already liked
+        const { data: existingLike, error: fetchError } = await supabase
+          .from('liked_photos')
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('photo_id', photo_id)
+          .single();
+
+        if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116: No rows found
+          throw fetchError;
+        }
+
+        if (existingLike) {
+          // Photo is already liked, so we should delete it
+          const { error: deleteError } = await supabase
+            .from('liked_photos')
+            .delete()
+            .eq('user_id', user.id)
+            .eq('photo_id', photo_id);
+
+          if (deleteError) {
+            throw deleteError;
+          }
+
+          console.log('Photo unliked');
+        } else {
+          // Photo is not liked, so we should insert it
+          const { error: insertError } = await supabase
+            .from('liked_photos')
+            .insert([
+              {
+                user_id: user.id,
+                user_email: user.email,
+                photo_id: photo.id,
+                width: photo.width,
+                height: photo.height,
+                photo_url: photo.url,
+                photographer: photo.photographer,
+                photographer_url: photo.photographer_url,
+                photographer_id: photo.photographer_id,
+                avg_color: photo.avg_color,
+                src: photo.src,
+                liked: photo.liked,
+                alt: photo.alt,
+              },
+            ]);
+
+          if (insertError) {
+            throw insertError;
+          }
+
+          console.log('Photo liked');
+        }
+      } catch (error) {
+        console.error('Error handling like/unlike photo:', error);
+      }
+    }
+
+    // Assuming toggleLike updates the state accordingly
+    toggleLike(photo_id, setPhotos);
+  };
+
+
 
   const fetchPhotos = async () => {
     if (loadingMore) return;
@@ -101,11 +182,11 @@ const ImagesContainer = () => {
                 </div>
                 <div
                   className={styles.heart}
-                  onClick={() => toggleLike(photo.id, setPhotos)}
+                  onClick={() => handleLike(photo.id)}
                 >
                   <Image
                     src={
-                      photo.liked ? "/images/heartred.svg" : "/images/heart.svg"
+                     (isPhotoLiked(photo.id))? "/images/heartred.svg" : "/images/heart.svg"
                     }
                     alt="like"
                     key={index}

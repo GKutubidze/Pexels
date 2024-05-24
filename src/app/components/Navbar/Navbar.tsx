@@ -28,7 +28,6 @@ const Navbar = (props: Props) => {
  
  
 
-
   const handleLogIn=()=>{
     const supabase=supabaseBrowser();
 
