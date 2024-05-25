@@ -8,6 +8,7 @@ import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import useLikedPhotos, { LikedPhoto } from "@/app/hooks/useLikedPhotos";
 import useAuth from "@/app/hooks/useAuth";
 import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
+import { supabaseServer } from "@/app/utils/supabase/server";
  
 // Adjust the type of Photo to be compatible with LikedPhoto
 type CompatiblePhoto = LikedPhoto & { id: number, url: string };
@@ -106,7 +107,8 @@ export const Liked = () => {
 
   return (
     <div>
-      {memoizedPhotos}
+
+   {memoizedPhotos}
     </div>
   );
 };

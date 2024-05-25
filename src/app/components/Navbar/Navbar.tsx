@@ -25,12 +25,10 @@ const Navbar = (props: Props) => {
   } = props;
 
   const user = useAuth();
- 
- 
-
+  
   const handleLogIn=()=>{
     const supabase=supabaseBrowser();
-
+  
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -93,8 +91,8 @@ const Navbar = (props: Props) => {
             <ConditionalDots setIsDotsCklicked={setIsDotsCklicked} />
           )}
         </div>
-
-        {user ? (
+       
+         {user ? (
           <button className={styles.join} onClick={handleLogOut}>
             Log out
           </button>

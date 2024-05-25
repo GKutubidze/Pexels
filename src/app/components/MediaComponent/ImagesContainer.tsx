@@ -20,8 +20,7 @@ const ImagesContainer = () => {
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const client = getPexelsClient();
   const width = useWindowWidth();
-  const { likedPhotos,isPhotoLiked} = useLikedPhotos();
-
+ const { likedPhotos, isPhotoLiked }=useLikedPhotos();
   const numberOfColumns = width <= 768 ? 2 : 3;
 
   const handleImageLoad = () => {
@@ -32,12 +31,12 @@ const ImagesContainer = () => {
 
   const handleLike = async (photo_id: number) => {
     const photo = photos.photos.find((item) => item.id === photo_id);
-
+  
     if (!user) {
       alert('You need to log in to like a photo');
       return;
     }
-
+  
     if (photo) {
       try {
         // Check if the photo is already liked
@@ -47,11 +46,11 @@ const ImagesContainer = () => {
           .eq('user_id', user.id)
           .eq('photo_id', photo_id)
           .single();
-
+  
         if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116: No rows found
           throw fetchError;
         }
-
+  
         if (existingLike) {
           // Photo is already liked, so we should delete it
           const { error: deleteError } = await supabase
@@ -59,11 +58,11 @@ const ImagesContainer = () => {
             .delete()
             .eq('user_id', user.id)
             .eq('photo_id', photo_id);
-
+  
           if (deleteError) {
             throw deleteError;
           }
-
+  
           console.log('Photo unliked');
         } else {
           // Photo is not liked, so we should insert it
@@ -86,21 +85,23 @@ const ImagesContainer = () => {
                 alt: photo.alt,
               },
             ]);
-
+  
           if (insertError) {
             throw insertError;
           }
-
+  
           console.log('Photo liked');
         }
       } catch (error) {
         console.error('Error handling like/unlike photo:', error);
+        alert(`Error: ${error}`);
       }
     }
-
+  
     // Assuming toggleLike updates the state accordingly
     toggleLike(photo_id, setPhotos);
   };
+  
 
 
 
@@ -186,7 +187,9 @@ const ImagesContainer = () => {
                 >
                   <Image
                     src={
-                     (isPhotoLiked(photo.id))? "/images/heartred.svg" : "/images/heart.svg"
+                      photo.liked
+                        ? "/images/heartred.svg"
+                        : "/images/heart.svg"
                     }
                     alt="like"
                     key={index}
