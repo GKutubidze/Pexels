@@ -32,7 +32,7 @@ const Navbar = (props: Props) => {
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo:"/" +"auth/callback",
+        redirectTo:"https://pexels-tawny.vercel.app/" +"auth/callback",
       },
     })
   }
