@@ -1,5 +1,5 @@
 import { useMediaContext } from "@/app/Context/MediaContext";
-import React, { useMemo, useState, useEffect, useContext } from "react"; // Import useState and useEffect
+import React, { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { handleDownload } from "@/app/utils/handleDownload";
 import styles from "./Liked.module.css";
@@ -8,59 +8,59 @@ import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import useLikedPhotos, { LikedPhoto } from "@/app/hooks/useLikedPhotos";
 import useAuth from "@/app/hooks/useAuth";
 import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
-import { supabaseServer } from "@/app/utils/supabase/server";
- 
-// Adjust the type of Photo to be compatible with LikedPhoto
+
 type CompatiblePhoto = LikedPhoto & { id: number, url: string };
 
 export const Liked = () => {
   const width = useWindowWidth();
-  const {setPhotos}=useMediaContext();
-  const { likedPhotos} = useLikedPhotos();
+  const { setPhotos } = useMediaContext();
+  const { likedPhotos, isPhotoLiked } = useLikedPhotos(); // Get likedPhotos and isPhotoLiked
   const numberOfColumns = width <= 768 ? 2 : 3;
   const user = useAuth();
   const supabase = supabaseBrowser();
-  const [deletedPhotoId, setDeletedPhotoId] = useState<number | null>(null); // State to track deleted photo ID
+  const [localLikedPhotos, setLocalLikedPhotos] = useState<LikedPhoto[]>([]);
+
+  useEffect(() => {
+    setLocalLikedPhotos(likedPhotos);
+  }, [likedPhotos]);
 
   const handleImageLoad = () => {
     console.log("Image loaded successfully");
   };
 
   const handleDelete = async (photoId: number) => {
-    if(user) {
+    if (user) {
+      // Optimistically update the UI by removing the photo from the local state
+      setLocalLikedPhotos((prevPhotos) => prevPhotos.filter(photo => photo.photo_id !== photoId));
+
       try {
         await supabase
           .from('liked_photos')
           .delete()
           .eq('user_id', user.id)
           .eq('photo_id', photoId);
-        setDeletedPhotoId(photoId); // Update state to trigger re-render
       } catch (error) {
         console.error("Error deleting photo:", error);
+        // Rollback the change in case of an error
+        const photoToRestore = likedPhotos.find(photo => photo.photo_id === photoId);
+        if (photoToRestore) {
+          setLocalLikedPhotos((prevPhotos) => [...prevPhotos, photoToRestore]);
+        }
       }
     }
-    toggleLike(photoId,setPhotos)
+
+    toggleLike(photoId, setPhotos);
   };
 
-  useEffect(() => {
-    // Reset the deleted photo ID after re-render
-    setDeletedPhotoId(null);
-  }, [likedPhotos]); // Reset when likedPhotos changes
-
   const memoizedPhotos = useMemo(() => {
-    // Create arrays to hold the images for each column
     const columns: CompatiblePhoto[][] = Array.from({ length: numberOfColumns }, () => []);
-    likedPhotos.forEach((photo: LikedPhoto, index: number) => {
-      // Convert LikedPhoto to CompatiblePhoto by adding id and url properties
+    localLikedPhotos.forEach((photo, index) => {
       const compatiblePhoto: CompatiblePhoto = {
         ...photo,
-        id: photo.photo_id, // Adjust according to your actual structure
-        url: photo.photo_url // Adjust according to your actual structure
+        id: photo.photo_id,
+        url: photo.photo_url
       };
-      // Exclude deleted photo from rendering
-      if (photo.photo_id !== deletedPhotoId) {
-        columns[index % numberOfColumns].push(compatiblePhoto);
-      }
+      columns[index % numberOfColumns].push(compatiblePhoto);
     });
 
     return (
@@ -103,12 +103,7 @@ export const Liked = () => {
         ))}
       </div>
     );
-  }, [likedPhotos, deletedPhotoId]); // Update when likedPhotos or deletedPhotoId changes
+  }, [localLikedPhotos, numberOfColumns]);
 
-  return (
-    <div>
-
-   {memoizedPhotos}
-    </div>
-  );
+  return <div>{memoizedPhotos}</div>;
 };
