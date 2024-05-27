@@ -27,7 +27,7 @@ const ImagesContainer = () => {
 
   const user = useAuth();
   const supabase = supabaseBrowser();
-  const { likedPhotos, setLikedPhotos, isPhotoLiked, loading: likedPhotosLoading } = useLikedPhotos();
+  const { setLikedPhotos, isPhotoLiked } = useLikedPhotos();
 
   const handleLike = async (photo_id: number) => {
     const photo = photos.photos.find((item) => item.id === photo_id);

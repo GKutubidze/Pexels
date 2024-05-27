@@ -9,6 +9,7 @@ import styles from "./SearchComponent.module.css";
 import ConditionalBoard from "./CondtionalBoard";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { useMediaContext } from "@/app/Context/MediaContext";
+ 
 type Props = {
   query: string;
   setQuery: Dispatch<SetStateAction<string>>;
@@ -20,6 +21,7 @@ const SearchComponent = ({ query, setQuery }: Props) => {
   const [showConditionalBoard, setShowConditionalBoard] =
     useState<boolean>(false);
   const [searchText, setSearchText] = useState<string>(" ");
+ 
 
   const handleClicked=()=>{
     setQuery(searchText.trim());
