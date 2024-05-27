@@ -27,24 +27,25 @@ const Navbar = (props: Props) => {
     setIsDropdownVisible,
   } = props;
   const user = useAuth();
-   useEffect(() => {
+  console.log(user);
+  useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-  
+
     const resetTimeout = () => {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(handleLogOut, 1000 * 60 * 60);
     };
-  
+
     const handleUserActivity = () => {
       resetTimeout();
     };
-  
+
     document.addEventListener("mousemove", handleUserActivity);
     document.addEventListener("keydown", handleUserActivity);
     document.addEventListener("click", handleUserActivity);
-  
+
     resetTimeout();
-  
+
     return () => {
       clearTimeout(timeoutId);
       document.removeEventListener("mousemove", handleUserActivity);
@@ -52,7 +53,7 @@ const Navbar = (props: Props) => {
       document.removeEventListener("click", handleUserActivity);
     };
   }, []);
-  
+
   return (
     <div className={styles.navbar}>
       <Image src={logo} alt="logo" />
@@ -100,6 +101,15 @@ const Navbar = (props: Props) => {
             <ConditionalDots setIsDotsCklicked={setIsDotsCklicked} />
           )}
         </div>
+        {/* {user ? (
+          <Image
+            src={user.user_metadata.avatar_url}
+            alt=""
+            width={30}
+            height={30}
+            style={{ borderRadius: "50%" }}
+          />
+        ) : null} */}
 
         {user ? (
           <button className={styles.join} onClick={handleLogOut}>
