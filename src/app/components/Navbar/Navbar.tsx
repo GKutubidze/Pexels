@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import styles from "./Navbar.module.css";
 import Image from "next/image";
 import logo from "../../../../public/images/logo.png";
@@ -9,6 +9,8 @@ import icon from "../../../../public/images/arrow-down.svg";
 import dots from "../../../../public/images/dots.svg";
 import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
 import useAuth from "@/app/hooks/useAuth";
+import { useEffect, useState } from "react";
+import { handleLogIn, handleLogOut } from "@/app/utils/authUtils";
 
 type Props = {
   isDropdownVisible: boolean;
@@ -16,6 +18,7 @@ type Props = {
   isDotsCklicked: boolean;
   setIsDotsCklicked: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 const Navbar = (props: Props) => {
   const {
     isDropdownVisible,
@@ -23,33 +26,39 @@ const Navbar = (props: Props) => {
     isDotsCklicked,
     setIsDropdownVisible,
   } = props;
-
   const user = useAuth();
+   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
   
-  const handleLogIn=()=>{
-    const supabase=supabaseBrowser();
+    const resetTimeout = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleLogOut, 1000 * 60 * 60);
+    };
   
-    supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo:"https://pexels-tawny.vercel.app/" +"auth/callback",
-      },
-    })
-  }
-
-  const handleLogOut = async () => {
-    const supabase = supabaseBrowser();
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error("Error signing out:", error);
-    else console.log("Successfully signed out");
-  };
+    const handleUserActivity = () => {
+      resetTimeout();
+    };
+  
+    document.addEventListener("mousemove", handleUserActivity);
+    document.addEventListener("keydown", handleUserActivity);
+    document.addEventListener("click", handleUserActivity);
+  
+    resetTimeout();
+  
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener("mousemove", handleUserActivity);
+      document.removeEventListener("keydown", handleUserActivity);
+      document.removeEventListener("click", handleUserActivity);
+    };
+  }, []);
   
   return (
     <div className={styles.navbar}>
       <Image src={logo} alt="logo" />
 
       <div className={styles.menuContainerMobile}>
-      {user ? (
+        {user ? (
           <button className={styles.join} onClick={handleLogOut}>
             Log out
           </button>
@@ -91,8 +100,8 @@ const Navbar = (props: Props) => {
             <ConditionalDots setIsDotsCklicked={setIsDotsCklicked} />
           )}
         </div>
-       
-         {user ? (
+
+        {user ? (
           <button className={styles.join} onClick={handleLogOut}>
             Log out
           </button>

@@ -48,6 +48,7 @@ const useLikedPhotos = () => {
     if (user) {
       fetchLikedPhotosFromDatabase(user.id);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // Memoized function to check if a photo is liked based on its ID
