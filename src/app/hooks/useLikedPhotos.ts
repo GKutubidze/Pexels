@@ -14,8 +14,8 @@ export interface LikedPhoto {
   avg_color: string;
   liked: boolean;
   alt: string;
-  src: any; // Adjust the type according to the actual structure
-  created_at: string; // Or you can use a Date object
+  src: any; 
+  created_at: string; 
   user_id: string;
 }
 
@@ -23,7 +23,7 @@ const useLikedPhotos = () => {
   const user = useAuth();
   const supabase = supabaseBrowser();
   const [likedPhotos, setLikedPhotos] = useState<LikedPhoto[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // Loading state
+  const [loading, setLoading] = useState<boolean>(true); 
 
   useEffect(() => {
     const fetchLikedPhotosFromDatabase = async (userId: string) => {
@@ -38,10 +38,10 @@ const useLikedPhotos = () => {
         }
 
         setLikedPhotos(likedPhotos);
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false); 
       } catch (error) {
         console.error('Error fetching liked photos:', error);
-        setLoading(false); // Set loading to false on error
+        setLoading(false); 
       }
     };
 
@@ -51,10 +51,10 @@ const useLikedPhotos = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // Memoized function to check if a photo is liked based on its ID
+ 
   const isPhotoLiked = useMemo(() => (photoId: number) => likedPhotos.some(photo => photo.photo_id === photoId), [likedPhotos]);
 
-  return { likedPhotos, setLikedPhotos, isPhotoLiked, loading }; // Return loading state
+  return { likedPhotos, setLikedPhotos, isPhotoLiked, loading }; 
 };
 
 export default useLikedPhotos;

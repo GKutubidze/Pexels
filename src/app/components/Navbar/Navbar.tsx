@@ -27,7 +27,6 @@ const Navbar = (props: Props) => {
     setIsDropdownVisible,
   } = props;
   const user = useAuth();
-  console.log(user);
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -101,7 +100,7 @@ const Navbar = (props: Props) => {
             <ConditionalDots setIsDotsCklicked={setIsDotsCklicked} />
           )}
         </div>
-        {/* {user ? (
+        {user ? (
           <Image
             src={user.user_metadata.avatar_url}
             alt=""
@@ -109,7 +108,7 @@ const Navbar = (props: Props) => {
             height={30}
             style={{ borderRadius: "50%" }}
           />
-        ) : null} */}
+        ) : null}
 
         {user ? (
           <button className={styles.join} onClick={handleLogOut}>

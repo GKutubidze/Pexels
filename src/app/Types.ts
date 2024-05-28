@@ -50,6 +50,7 @@ export interface Video {
   url: string;
   image: string;
   duration: number;
+  liked:boolean;
   user: {
     id: number;
     name: string;

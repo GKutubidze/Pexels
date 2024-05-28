@@ -11,6 +11,10 @@ import VideoPopup from "../VideoPopup/VideoPopup";
 import LazyVideo from "../LazyVideo/LazyVideo";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { Video } from "@/app/Types";
+import useAuth from "@/app/hooks/useAuth";
+import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
+import useLikedVideos, { LikedVideo } from "@/app/hooks/useLikedVideos";
+import { toggleVideoLike } from "@/app/utils/toggleVideoLike";
 
 const VideosContainer = () => {
   const [page, setPage] = useState<number>(1);
@@ -21,19 +25,29 @@ const VideosContainer = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const width = useWindowWidth();
   const numberOfColumns = width <= 768 ? 2 : 3;
+  const user = useAuth();
+  const supabase = supabaseBrowser();
 
+  const {isVideoLiked,setLikedVideos}=useLikedVideos();
+  
+  
   const loadVideos = async () => {
     setLoading(true);
     try {
       const response = await client.videos.popular({ per_page: 10, page });
       if ("videos" in response) {
+        const videosWithLiked = response.videos.map((video) => ({
+          ...video,
+          liked: isVideoLiked(video.id),
+        }));
+
         setVideos((prevVideos) => ({
           ...prevVideos,
           page: response.page,
           per_page: response.per_page,
           total_results: response.total_results,
           url: response.url,
-          videos: [...prevVideos.videos, ...response.videos],
+          videos: [...prevVideos.videos, ...videosWithLiked],
         }));
         setPage((prevPage) => prevPage + 1);
       } else {
@@ -46,6 +60,83 @@ const VideosContainer = () => {
     }
   };
 
+  const handleLike = async (video_id: number) => {
+    const video = videos.videos.find((item) => item.id === video_id);
+
+    if (!user) {
+      alert("You need to log in to like a video");
+      return;
+    }
+
+    if (video) {
+      try {
+        const { data: existingLike, error: fetchError } = await supabase
+          .from("liked_videos")
+          .select("*")
+          .eq("user_id", user.id)
+          .eq("video_id", video_id)
+          .single();
+
+        if (fetchError && fetchError.code !== "PGRST116") {
+          throw fetchError;
+        }
+
+        if (existingLike) {
+          setLikedVideos((prevLikedVideos) =>
+            prevLikedVideos.filter((video) => video.video_id !== video_id)
+          );
+
+          const { error: deleteError } = await supabase
+            .from("liked_videos")
+            .delete()
+            .eq("user_id", user.id)
+            .eq("video_id", video_id);
+
+          if (deleteError) {
+            throw deleteError;
+          }
+
+          console.log("Video unliked");
+        } else {
+          const newLikedVideo: LikedVideo = {
+            user_id: user.id,
+            user_email: user.email as string,
+            video_id: video.id,
+            width: video.width,
+            height: video.height,
+            url: video.url,
+            image: video.image,
+            duration: video.duration,
+            link: getHighestResolutionVideo(video.video_files).link,
+            created_at: new Date().toISOString(),
+          };
+
+          setLikedVideos((prevLikedVideos) => [
+            ...prevLikedVideos,
+            newLikedVideo,
+          ]);
+
+          const { error: insertError } = await supabase
+            .from("liked_videos")
+            .insert([newLikedVideo]);
+
+          if (insertError) {
+            throw insertError;
+          }
+
+          console.log("Video liked");
+        }
+      } catch (error) {
+        console.error("Error handling like/unlike video:", error);
+        alert(`Error: ${error}`);
+      }
+    }
+    toggleVideoLike(video_id, setVideos);
+  };
+  useEffect(() => {
+    loadVideos(); // Initial fetch on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -101,6 +192,22 @@ const VideosContainer = () => {
                       className={styles.downloadIcon}
                     />
                   </div>
+                  <div
+                  className={styles.heart}
+                  onClick={() => handleLike(video.id)}
+                >
+                  <Image
+                   src={
+                    isVideoLiked(video.id)
+                      ? "/images/heartred.svg"
+                      : "/images/heart.svg"
+                  }
+                    alt="like"
+                    key={index}
+                    width={25}
+                    height={25}
+                  />
+                </div>
                   <LazyVideo
                     src={bestVideoFile.link}
                     width="100%"
