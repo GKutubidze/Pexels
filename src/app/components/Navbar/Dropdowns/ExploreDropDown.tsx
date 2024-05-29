@@ -16,7 +16,7 @@ function ExploreDropDown({
         const distanceY = e.clientY - (top + height / 2);
         const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
-        const radius = 200; // Set your desired radius here
+        const radius = 200;  
         setIsDropdownVisible(distance <= radius);
       }
     };

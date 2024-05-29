@@ -5,6 +5,7 @@
 .main {
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 .photoWrapper {
   flex: 1;
@@ -31,8 +32,7 @@
   cursor: pointer;
   overflow: hidden;
   margin: 0 10px;
-
- }
+}
 
 .overlay {
   position: absolute;
@@ -77,15 +77,13 @@
 }
 
 .trendingContainer {
-  position: absolute;
-
-  width: 80px;
+  position: relative;
+  width: 90px;
   right: 10px;
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 132px;
   background-color: var(--white);
   color: black;
   border: 1px solid #c2c1c1;
@@ -95,13 +93,15 @@
   cursor: pointer;
   line-height: 1.3;
   min-height: 50px;
-  margin-bottom: 90px;
-  margin-right: 15px;
+  margin-left: 20px;
 }
-
+.menuContainer{
+  display: flex;
+  justify-content: right;
+}
 .dropdownContent {
   position: absolute;
-  min-width: 147px;
+  width: 120px;
   bottom: -110px;
   right: 0;
   background-color: white;

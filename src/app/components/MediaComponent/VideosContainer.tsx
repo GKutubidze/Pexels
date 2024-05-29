@@ -19,18 +19,20 @@ import { toggleVideoLike } from "@/app/utils/toggleVideoLike";
 const VideosContainer = () => {
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isVideoCklicked, setIsVideoCklicked] = useState<boolean>(false);
-  const {setVideos,videos} = useMediaContext();
+  const { setVideos, videos } = useMediaContext();
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const client = getPexelsClient();
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const width = useWindowWidth();
   const numberOfColumns = width <= 768 ? 2 : 3;
   const user = useAuth();
   const supabase = supabaseBrowser();
+  const { likedVideos, setLikedVideos } = useLikedVideos();
 
-  const {isVideoLiked,setLikedVideos}=useLikedVideos();
-  
-  
+  const isVideoLiked = (videoId: number) => {
+    return likedVideos.some((likedVideo) => likedVideo.video_id === videoId);
+  };
+
   const loadVideos = async () => {
     setLoading(true);
     try {
@@ -41,14 +43,19 @@ const VideosContainer = () => {
           liked: isVideoLiked(video.id),
         }));
 
-        setVideos((prevVideos) => ({
-          ...prevVideos,
-          page: response.page,
-          per_page: response.per_page,
-          total_results: response.total_results,
-          url: response.url,
-          videos: [...prevVideos.videos, ...videosWithLiked],
-        }));
+        setVideos((prevVideos) => {
+          const newVideos = videosWithLiked.filter(
+            (video) => !prevVideos.videos.some((v) => v.id === video.id)
+          );
+          return {
+            ...prevVideos,
+            page: response.page,
+            per_page: response.per_page,
+            total_results: response.total_results,
+            url: response.url,
+            videos: [...prevVideos.videos, ...newVideos],
+          };
+        });
         setPage((prevPage) => prevPage + 1);
       } else {
         console.error("Error response:", response);
@@ -133,10 +140,12 @@ const VideosContainer = () => {
     }
     toggleVideoLike(video_id, setVideos);
   };
+
   useEffect(() => {
     loadVideos(); // Initial fetch on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       if (
@@ -174,12 +183,8 @@ const VideosContainer = () => {
               );
               return (
                 <div
-                  key={index}
+                  key={video.id} // Use video ID as the unique key
                   className={styles.videoWrapper}
-                  onClick={() => {
-                    setSelectedVideo(video);
-                    // setIsVideoClicked(true);
-                  }}
                 >
                   <div className={styles.overlay}>
                     <Image
@@ -193,22 +198,22 @@ const VideosContainer = () => {
                     />
                   </div>
                   <div
-                  className={styles.heart}
-                  onClick={() => handleLike(video.id)}
-                >
-                  <Image
-                   src={
-                    isVideoLiked(video.id)
-                      ? "/images/heartred.svg"
-                      : "/images/heart.svg"
-                  }
-                    alt="like"
-                    key={index}
-                    width={25}
-                    height={25}
-                  />
-                </div>
-                  <LazyVideo
+                    className={styles.heart}
+                    onClick={() => handleLike(video.id)}
+                  >
+                    <Image
+                      src={
+                        isVideoLiked(video.id)
+                          ? "/images/heartred.svg"
+                          : "/images/heart.svg"
+                      }
+                      alt="like"
+                      key={index}
+                      width={25}
+                      height={25}
+                    />
+                  </div>
+                  <video
                     src={bestVideoFile.link}
                     width="100%"
                     height={video.height}
@@ -218,6 +223,10 @@ const VideosContainer = () => {
                     muted
                     loop
                     className={styles.video}
+                    onClick={() => {
+                      setSelectedVideo(video);
+                      setIsPopupOpen(true);
+                    }}
                   />
                 </div>
               );
@@ -227,7 +236,8 @@ const VideosContainer = () => {
       </div>
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videos.videos]);
+  }, [videos.videos, likedVideos]);
+
   return (
     <div>
       <MediaHeader title="Trending Free Stock Videos" />
@@ -235,11 +245,8 @@ const VideosContainer = () => {
         {memoizedVideos}
         {loading && <div className={styles.loadingIndicator}>Loading...</div>}
       </div>
-      {isVideoCklicked && selectedVideo && (
-        <VideoPopup
-          video={selectedVideo}
-          setIsVideoCklicked={setIsVideoCklicked}
-        />
+      {isPopupOpen && (
+        <VideoPopup video={selectedVideo} setIsPopupOpen={setIsPopupOpen} />
       )}
     </div>
   );

@@ -11,10 +11,12 @@
   width: 100%;
   height: auto;
   margin-bottom: 20px;
+  z-index: 1000;
 }
 
 .photoContainer{
   position: relative;
+  cursor: pointer;
 
 }
 

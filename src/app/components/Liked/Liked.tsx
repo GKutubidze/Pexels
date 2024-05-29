@@ -242,6 +242,7 @@ export const Liked = () => {
 
   return (
     <div className={styles.main}>
+      <div className={styles.menuContainer}>
       <div
         className={styles.trendingContainer}
         onClick={toggleDropdown}
@@ -276,6 +277,8 @@ export const Liked = () => {
           </div>
         )}
       </div>
+      </div>
+     
       {filter === "Photos" ? (
         memoizedPhotos
       ) : filter === "Videos" ? (

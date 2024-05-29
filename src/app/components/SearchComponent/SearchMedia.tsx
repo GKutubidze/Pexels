@@ -12,6 +12,7 @@ import { Photo } from "pexels/dist/types";
 import useLikedPhotos, { LikedPhoto } from "@/app/hooks/useLikedPhotos";
 import useAuth from "@/app/hooks/useAuth";
 import { toggleLike } from "@/app/utils/ toggleLike";
+import ImagePopup from "../ImagePopup/ImagePopup";
 
 const LazyImage = lazy(() => import("next/image"));
 
@@ -20,6 +21,9 @@ export const SearchMedia = () => {
   const [page, setPage] = useState<number>(1);
   const [loadingMorePicture, setLoadingMorePicture] = useState<boolean>(false);
   const [likedPhotoIds, setLikedPhotoIds] = useState<number[]>([]);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+
   const client = getPexelsClient();
   const width = useWindowWidth();
   const numberOfColumns = width <= 768 ? 2 : 3;
@@ -256,6 +260,10 @@ export const SearchMedia = () => {
                   onLoad={handleImageLoad}
                   onError={handleImageError}
                   priority
+                  onClick={() => {
+                    setSelectedPhoto(photo);
+                    setIsPopupOpen(true);
+                  }}
                 />
               </div>
             ))}
@@ -268,6 +276,9 @@ export const SearchMedia = () => {
 
   return (
     <div>
+       {isPopupOpen && (
+        <ImagePopup photo={selectedPhoto} setIsPopupOpen={setIsPopupOpen} />
+      )}
       {memoizedPhotos}
       {loadingMorePicture && <div className={styles.loadingIndicator}>Loading...</div>}
     </div>
