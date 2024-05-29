@@ -39,7 +39,7 @@ const MediaHeader = ({title}:{title:string}) => {
       <div className={styles.title}>
         <p>{title}</p>
       </div>
-      <div className={styles.trendingContainer} onClick={toggleDropdown} ref={dropdownRef}>
+      {/* <div className={styles.trendingContainer} onClick={toggleDropdown} ref={dropdownRef}>
         <p>{selectedOption}</p>
         {!isDropdownOpen ? <Image src={icon} alt='' /> : <Image src={up} alt='' />}
         {isDropdownOpen && (
@@ -52,7 +52,7 @@ const MediaHeader = ({title}:{title:string}) => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

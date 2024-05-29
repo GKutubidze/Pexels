@@ -3,7 +3,7 @@ import React from "react";
 import ImagesContainer from "../MediaComponent/ImagesContainer";
 import MediaHeader from "../MediaComponent/MediaHeader";
 import VideosContainer from "../MediaComponent/VideosContainer";
-import { SearchMedia } from "../SearchComponent/SearchMedia";
+import { SearchImage } from "../SearchComponent/SearchImage";
 import SearchVideo from "../SearchComponent/SearchVideo";
 import { Liked } from "../Liked/Liked";
  
@@ -20,7 +20,7 @@ const MediaContent = () => {
       </>
     );
   } else if (context.query.length > 0 && context.searchType== "Photos") {
-    mediaContent = <SearchMedia />;
+    mediaContent = <SearchImage />;
   } else if (context.query.length > 0 && context.searchType == "Videos") {
     mediaContent = <SearchVideo />;
   } else if (context.mediaType === "Videos" && context.query.length <= 0) {

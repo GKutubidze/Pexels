@@ -1,124 +1,20 @@
 "use client";
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import styles from "./ImagesContainer.module.css";
-import Image from "next/image";
 import { MediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
-import { handleDownload } from "@/app/utils/handleDownload";
 import { getUniquePhotos } from "@/app/utils/getUniquePhotos";
-import { Photo } from "pexels/dist/types";
-import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import useAuth from "@/app/hooks/useAuth";
 import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
-import useLikedPhotos, { LikedPhoto } from "@/app/hooks/useLikedPhotos";
-import { toggleLike } from "@/app/utils/ toggleLike";
-import ImagePopup from "../ImagePopup/ImagePopup";
+import PhotosGrid from "../PhotosGrid/PhotosGrid";
 
 const ImagesContainer = () => {
   const { photos, setPhotos } = useContext(MediaContext);
   const [page, setPage] = useState<number>(1);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
-
+  const [likedPhotoIds, setLikedPhotoIds] = useState<number[]>([]);
   const client = getPexelsClient();
-  const width = useWindowWidth();
-  const numberOfColumns = width <= 768 ? 2 : 3;
-
-  const handleImageLoad = () => {
-    console.log("Image loaded successfully");
-  };
-
   const user = useAuth();
   const supabase = supabaseBrowser();
-  const { setLikedPhotos, isPhotoLiked } = useLikedPhotos();
-
-  const handleLike = async (photo_id: number) => {
-    const photo = photos.photos.find((item) => item.id === photo_id);
-
-    if (!user) {
-      alert("You need to log in to like a photo");
-      return;
-    }
-
-    if (photo) {
-      try {
-        // Check if the photo is already liked
-        const { data: existingLike, error: fetchError } = await supabase
-          .from("liked_photos")
-          .select("*")
-          .eq("user_id", user.id)
-          .eq("photo_id", photo_id)
-          .single();
-
-        if (fetchError && fetchError.code !== "PGRST116") {
-          // PGRST116: No rows found
-          throw fetchError;
-        }
-
-        if (existingLike) {
-          // Optimistically update the local state by removing the photo from likedPhotos
-          setLikedPhotos((prevLikedPhotos) =>
-            prevLikedPhotos.filter((photo) => photo.photo_id !== photo_id)
-          );
-
-          // Photo is already liked, so we should delete it
-          const { error: deleteError } = await supabase
-            .from("liked_photos")
-            .delete()
-            .eq("user_id", user.id)
-            .eq("photo_id", photo_id);
-
-          if (deleteError) {
-            throw deleteError;
-          }
-
-          console.log("Photo unliked");
-        } else {
-          // Construct a complete LikedPhoto object for optimistic update
-          const newLikedPhoto: LikedPhoto = {
-            user_id: user.id,
-            user_email: user.email as string,
-            photo_id: photo.id,
-            width: photo.width,
-            height: photo.height,
-            photo_url: photo.url,
-            photographer: photo.photographer,
-            photographer_url: photo.photographer_url,
-            photographer_id: Number(photo.photographer_id),
-            avg_color: photo.avg_color || "",
-            src: photo.src,
-            liked: photo.liked,
-            alt: photo.alt || "",
-            created_at: new Date().toISOString(),
-          };
-
-          // Optimistically update the local state by adding the new liked photo
-          setLikedPhotos((prevLikedPhotos) => [
-            ...prevLikedPhotos,
-            newLikedPhoto,
-          ]);
-
-          // Photo is not liked, so we should insert it
-          const { error: insertError } = await supabase
-            .from("liked_photos")
-            .insert([newLikedPhoto]);
-
-          if (insertError) {
-            throw insertError;
-          }
-
-          console.log("Photo liked");
-        }
-      } catch (error) {
-        console.error("Error handling like/unlike photo:", error);
-        alert(`Error: ${error}`);
-      }
-    }
-
-    // Assuming toggleLike updates the state accordingly
-    toggleLike(photo_id, setPhotos);
-  };
 
   const fetchPhotos = async () => {
     if (loadingMore) return;
@@ -170,80 +66,42 @@ const ImagesContainer = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingMore]);
 
-  const memoizedPhotos = useMemo(() => {
-    // Create arrays to hold the images for each column
-    const columns: Photo[][] = Array.from(
-      { length: numberOfColumns },
-      () => []
-    );
-    photos.photos.forEach((photo, index) => {
-      columns[index % numberOfColumns].push(photo);
-    });
-    return (
-      <div className={styles.container}>
-        {columns.map((column, columnIndex) => (
-          <div key={columnIndex} className={styles.photoWrapper}>
-            {column.map((photo, index) => (
-              <div key={index} className={styles.photoContainer}>
-                <div className={styles.overlay}>
-                  <Image
-                    src={"/images/download.svg"}
-                    alt=""
-                    onClick={() =>
-                      handleDownload(photo.src.original, photo.photographer)
-                    }
-                    width={25}
-                    height={25}
-                  />
-                </div>
-                <div
-                  className={styles.heart}
-                  onClick={() => handleLike(photo.id)}
-                >
-                  <Image
-                    src={
-                      isPhotoLiked(photo.id)
-                        ? "/images/heartred.svg"
-                        : "/images/heart.svg"
-                    }
-                    alt="like"
-                    key={index}
-                    width={25}
-                    height={25}
-                  />
-                </div>
+  useEffect(() => {
+    const fetchLikedPhotos = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from("liked_photos")
+            .select("photo_id")
+            .eq("user_id", user.id);
 
-                <Image
-                  key={index}
-                  src={photo.src.original}
-                  alt={photo.alt || ""}
-                  width={500}
-                  height={500}
-                  className={styles.photo}
-                  onLoad={handleImageLoad}
-                  priority
-                  onClick={() => {
-                    setSelectedPhoto(photo);
-                    setIsPopupOpen(true);
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    );
+          if (error) {
+            throw error;
+          }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [photos.photos, isPhotoLiked]);
+          const likedPhotoIds = data.map(
+            (item: { photo_id: number }) => item.photo_id
+          );
+          setLikedPhotoIds(likedPhotoIds);
+        } catch (error) {
+          console.error("Error fetching liked photos:", error);
+        }
+      }
+    };
+
+    fetchLikedPhotos();
+  }, [user, supabase]);
 
   return (
     <div>
-      {isPopupOpen && (
-        <ImagePopup photo={selectedPhoto} setIsPopupOpen={setIsPopupOpen} />
-      )}
-      {memoizedPhotos}
-      {loadingMore && <div className={styles.loadingIndicator}>Loading...</div>}
+      <PhotosGrid
+        photos={photos.photos}
+        likedPhotoIds={likedPhotoIds}
+        setPhotos={setPhotos}
+        loadingMore={loadingMore}
+        setLikedPhotoIds={setLikedPhotoIds}
+        photoss={photos}
+      />
     </div>
   );
 };
