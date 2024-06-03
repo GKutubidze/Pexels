@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     )
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`https://your-vercel-domain.vercel.app${next}`);
+      return NextResponse.redirect(`https://pexels-tawny.vercel.app${next}`);
     }
   }
 
