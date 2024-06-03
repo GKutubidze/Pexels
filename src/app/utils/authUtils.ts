@@ -9,7 +9,7 @@ export const handleLogIn = async () => {
   supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${baseUrl}/src/app/auth/callback`,
+      redirectTo: `${baseUrl}/auth/callback`,
     },
   });
 };
