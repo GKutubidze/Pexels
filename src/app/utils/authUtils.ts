@@ -5,7 +5,7 @@ export const handleLogIn = async () => {
 
   // Determine the base URL
   const baseUrl ="https://pexels-tawny.vercel.app"; // Replace with your actual Vercel app URL
-
+  
   supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
