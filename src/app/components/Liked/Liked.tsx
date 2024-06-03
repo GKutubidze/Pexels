@@ -13,7 +13,6 @@ import { toggleVideoLike } from "@/app/utils/toggleVideoLike";
 import icon from "../../../../public/images/icon-down.svg";
 import up from "../../../../public/images/icon-up.svg";
 import correct from "../../../../public/images/correct.svg";
-import download from "../../../../public/images/download.svg";
 
 type CompatiblePhoto = LikedPhoto & { id: number; url: string };
 type CompatibleVideo = LikedVideo & { id: number; url: string };
@@ -22,8 +21,8 @@ type temp = "Photos" | "Videos" | "All";
 export const Liked = () => {
   const width = useWindowWidth();
   const { setPhotos, setVideos } = useMediaContext();
-  const { likedPhotos, isPhotoLiked } = useLikedPhotos();
-  const { likedVideos, isVideoLiked } = useLikedVideos();
+  const { likedPhotos } = useLikedPhotos();
+  const { likedVideos} = useLikedVideos();
   const numberOfColumns = width <= 768 ? 2 : 3;
   const user = useAuth();
   const supabase = supabaseBrowser();

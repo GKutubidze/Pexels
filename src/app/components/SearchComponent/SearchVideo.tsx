@@ -6,7 +6,6 @@ import Image from "next/image";
 import download from "../../../../public/images/download.svg";
 import styles from "./SearchVideo.module.css";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
-import LazyVideo from "../LazyVideo/LazyVideo";
 import { Video } from "@/app/Types";
 import { getHighestResolutionVideo } from "@/app/utils/getHighestResolutionVideo";
 import useAuth from "@/app/hooks/useAuth";

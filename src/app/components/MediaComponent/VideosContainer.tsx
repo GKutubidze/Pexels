@@ -8,7 +8,6 @@ import Image from "next/image";
 import MediaHeader from "./MediaHeader";
 import { getHighestResolutionVideo } from "@/app/utils/getHighestResolutionVideo";
 import VideoPopup from "../VideoPopup/VideoPopup";
-import LazyVideo from "../LazyVideo/LazyVideo";
 import { useWindowWidth } from "@/app/hooks/useWindowWidth";
 import { Video } from "@/app/Types";
 import useAuth from "@/app/hooks/useAuth";
