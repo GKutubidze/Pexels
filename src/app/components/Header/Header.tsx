@@ -13,8 +13,8 @@ const Header = () => {
   const [isDropdownVisible, setIsDropdownVisible] = useState<boolean>(false);
   const [isDotsCklicked, setIsDotsCklicked] = useState<boolean>(false);
 
-
   useEffect(() => {
+    if (!client) return;
     const fetchRandomPhoto = async () => {
       setLoading(true);
       try {
@@ -48,7 +48,12 @@ const Header = () => {
   return (
     <>
       <div className={styles.header} style={headerStyle}>
-        <Navbar isDropdownVisible={isDropdownVisible} setIsDropdownVisible={setIsDropdownVisible} isDotsCklicked={isDotsCklicked} setIsDotsCklicked={setIsDotsCklicked} />
+        <Navbar
+          isDropdownVisible={isDropdownVisible}
+          setIsDropdownVisible={setIsDropdownVisible}
+          isDotsCklicked={isDotsCklicked}
+          setIsDotsCklicked={setIsDotsCklicked}
+        />
 
         <div className={styles.info}>
           <p>
