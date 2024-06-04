@@ -33,6 +33,7 @@ const VideosContainer = () => {
   };
 
   const loadVideos = async () => {
+    if (!client) return;
     setLoading(true);
     try {
       const response = await client.videos.popular({ per_page: 10, page });

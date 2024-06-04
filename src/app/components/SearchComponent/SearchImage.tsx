@@ -3,8 +3,8 @@ import { useMediaContext } from "@/app/Context/MediaContext";
 import { getPexelsClient } from "@/app/utils/getPexelsClient";
 import React, { useEffect, useState } from "react";
 import supabaseBrowser from "@/app/utils/supabase/supabaseBrowser";
- import useAuth from "@/app/hooks/useAuth";
- import PhotosGrid from "../PhotosGrid/PhotosGrid";
+import useAuth from "@/app/hooks/useAuth";
+import PhotosGrid from "../PhotosGrid/PhotosGrid";
 
 export const SearchImage = () => {
   const { searchedPhotos, setSearchedPhotos, query } = useMediaContext();
@@ -16,10 +16,9 @@ export const SearchImage = () => {
 
   const user = useAuth();
   const supabase = supabaseBrowser();
- 
-   
 
   const searchPhotos = async (newQuery: string, newPage: number) => {
+    if (!client) return;
     setLoadingMorePicture(true);
     try {
       const response = await client.photos.search({
@@ -125,8 +124,8 @@ export const SearchImage = () => {
         likedPhotoIds={likedPhotoIds}
         setLikedPhotoIds={setLikedPhotoIds}
         setPhotos={setSearchedPhotos}
-         loadingMore={loadingMorePicture}
-         photoss={searchedPhotos}
+        loadingMore={loadingMorePicture}
+        photoss={searchedPhotos}
       />
     </div>
   );

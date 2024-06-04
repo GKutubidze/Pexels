@@ -26,12 +26,13 @@ const SearchVideo = () => {
   const supabase = supabaseBrowser();
   const { likedVideos, setLikedVideos } = useLikedVideos();
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
- 
+
   const isVideoLiked = (videoId: number) => {
     return likedVideos.some((likedVideo) => likedVideo.video_id === videoId);
   };
 
   const searchVideos = async () => {
+    if (!client) return;
     setLoading(true);
     try {
       const response = await client.videos.search({
@@ -183,7 +184,10 @@ const SearchVideo = () => {
   }, [loading]);
 
   const memoizedVideos = useMemo(() => {
-    const columns: Video[][] = Array.from({ length: numberOfColumns }, () => []);
+    const columns: Video[][] = Array.from(
+      { length: numberOfColumns },
+      () => []
+    );
     searchedVideos.videos.forEach((video, index) => {
       columns[index % numberOfColumns].push(video);
     });
@@ -193,7 +197,9 @@ const SearchVideo = () => {
         {columns.map((column, columnIndex) => (
           <div key={columnIndex} className={styles.videoColumn}>
             {column.map((video) => {
-              const bestVideoFile = getHighestResolutionVideo(video.video_files);
+              const bestVideoFile = getHighestResolutionVideo(
+                video.video_files
+              );
               return (
                 <div
                   key={video.id} // Use video ID as the unique key
@@ -240,8 +246,8 @@ const SearchVideo = () => {
                     className={styles.video}
                     onClick={() => {
                       setSelectedVideo(video);
-                       setIsPopupOpen(true)
-                     }}
+                      setIsPopupOpen(true);
+                    }}
                   />
                 </div>
               );
@@ -258,10 +264,7 @@ const SearchVideo = () => {
       {memoizedVideos}
       {loading && <div className={styles.loadingIndicator}>Loading...</div>}
       {isPopupOpen && (
-        <VideoPopup
-          video={selectedVideo}
-          setIsPopupOpen={setIsPopupOpen}
-        />
+        <VideoPopup video={selectedVideo} setIsPopupOpen={setIsPopupOpen} />
       )}
     </div>
   );

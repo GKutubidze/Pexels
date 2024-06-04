@@ -17,7 +17,9 @@ const ImagesContainer = () => {
   const supabase = supabaseBrowser();
 
   const fetchPhotos = async () => {
+    if (!client) return;
     if (loadingMore) return;
+
     setLoadingMore(true);
     try {
       const response = await client.photos.curated({ page, per_page: 15 });
